@@ -1,5 +1,9 @@
 package Classes;
 
-public class Map {
+import Collections.Graph.Graph;
+
+public class Map<T> extends Graph<T> {
+
+
 
 }

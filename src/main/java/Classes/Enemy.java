@@ -8,7 +8,8 @@ public class Enemy {
     private String name;
     private Division division;
 
-    public Enemy(int power, String name, String division) {
+    public Enemy(int power, String name, Division division) {
+        this.division = division;
         this.power = power;
         this.name = name;
     }
