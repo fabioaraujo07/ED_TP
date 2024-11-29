@@ -1,6 +1,5 @@
 package Classes;
 import Enumerations.Items;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Item {
     private Division division;
