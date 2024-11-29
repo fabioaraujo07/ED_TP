@@ -16,6 +16,4 @@ public class Division {
     public void setName(String name) {
         this.name = name;
     }
-
-
 }

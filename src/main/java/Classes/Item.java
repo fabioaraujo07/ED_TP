@@ -5,14 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Item {
     private Division division;
     private String items;
-    private int recoveredPoints;
-    private int extraPoints;
+    private int points;
 
-    public Item(Division division, String items, int recoveredPoints, int extraPoints) {
+    public Item (Division division, String items, int points) {
         this.division = division;
         this.items = items;
-        this.recoveredPoints = recoveredPoints;
-        this.extraPoints = extraPoints;
+        this.points = points;
     }
 
     public Division getDivision() {
@@ -31,21 +29,12 @@ public class Item {
         this.items = items;
     }
 
-    public int getRecoveredPoints() {
-        return recoveredPoints;
+    public int getPoints() {
+        return points;
     }
 
-    public void setRecoveredPoints(int recoveredPoints) {
-        this.recoveredPoints = recoveredPoints;
+    public void setPoints(int points) {
+        this.points = points;
     }
-
-    public int getExtraPoints() {
-        return extraPoints;
-    }
-
-    public void setExtraPoints(int extraPoints) {
-        this.extraPoints = extraPoints;
-    }
-
 }
 

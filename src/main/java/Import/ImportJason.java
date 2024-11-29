@@ -1,7 +1,11 @@
 package Import;
 
 public class ImportJason {
-    public static void main(String[] args) {
+
+    public ImportJason() {
+    }
+
+    public  importJason(String filename) {
 
     }
 }
