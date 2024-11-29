@@ -164,7 +164,7 @@ public class Graph<T> implements GraphADT<T> {
         }
     }
 
-    protected boolean indexIsValid(int index) {
+    protected    boolean indexIsValid(int index) {
         return index >= 0 && index < numVertices;
     }
 
