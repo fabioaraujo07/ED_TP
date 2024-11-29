@@ -2,6 +2,7 @@ package Import;
 
 import Classes.Division;
 import Classes.Map;
+import Exceptions.DivisionNotFound;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -50,12 +51,12 @@ public class ImportJason {
         }
     }
 
-    private Division findDivisionByName(Map<Division> map, String name) {
+    private Division findDivisionByName(Map<Division> map, String name) throws DivisionNotFound {
         for (int i = 0; i < map.getNumVertices(); i++) {
             if (map.getVertex(i).getName().equals(name)) {
                 return map.getVertex(i);
             }
         }
-        return null;
+        throw new DivisionNotFound(name);
     }
 }
