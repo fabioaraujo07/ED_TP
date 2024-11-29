@@ -239,5 +239,25 @@ public class Graph<T> implements GraphADT<T> {
             throw new IllegalArgumentException("Invalid index");
         }
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Grafo:\n");
+        sb.append("Vértices:\n");
+
+        for (int i = 0; i < numVertices; i++) {
+            sb.append(vertices[i]).append("\n ");
+        }
+
+        sb.append("\n\nMatriz de Adjacência:\n");
+        for (int i = 0; i < numVertices; i++) {
+            for (int j = 0; j < numVertices; j++) {
+                sb.append(adjMatrix[i][j] ? "1 " : "0 ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
 }
 
