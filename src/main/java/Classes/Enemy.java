@@ -6,6 +6,7 @@ public class Enemy {
 
     private int power;
     private String name;
+    private Division division;
 
     public Enemy(int power, String name, String division) {
         this.power = power;
