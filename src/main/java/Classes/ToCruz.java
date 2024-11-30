@@ -26,8 +26,7 @@ public class ToCruz<T> implements Player<T> {
         System.out.println("Item added to the bag");
     }
 
-    @Override
-    public void removeItem(Item item) {
+    private void removeItem(Item item) {
         bag.pop();
         System.out.println("Item removed from the bag");
     }
@@ -49,9 +48,7 @@ public class ToCruz<T> implements Player<T> {
         System.out.println("Player has moved to the division: " + currentDivision);
     }
 
-
-    @Override
-    public int LifePointsChanged(int points) {
+    private int LifePointsChanged(int points) {
         this.lifePoints += points;
         System.out.println("The life points changed to " + lifePoints);
         return lifePoints;

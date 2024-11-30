@@ -9,11 +9,7 @@ public interface Player<T>{
 
     public void addItem(Item item);
 
-    public void removeItem(Item item);
-
     public void movePlayer(ToCruz player, Map map, Division division);
-
-    public int LifePointsChanged(int points);
 
     public void useItem(ToCruz player, Item item);
 
