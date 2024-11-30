@@ -86,9 +86,9 @@ public class ImportJason {
         try (FileReader fileReader = new FileReader(filepath)){
             JSONObject jsonObject = (JSONObject) jsonParser.parse(fileReader);
 
-            JSONObject enemiesArray = (JSONObject) jsonObject.get("alvo");
-            String tipo = (String) enemiesArray.get("tipo");
-            String divisionName = (String) enemiesArray.get("divisao");
+            JSONObject GoalArray = (JSONObject) jsonObject.get("alvo");
+            String tipo = (String) GoalArray.get("tipo");
+            String divisionName = (String) GoalArray.get("divisao");
             Division division = new Division(divisionName);
 
             Goal goal = new Goal(division, tipo);
