@@ -36,7 +36,11 @@ public class ToCruz<T> implements Player<T> {
     public void movePlayer(ToCruz player, Map map, Division division) {
         Division current = player.getCurrentDivision();
 
-        if (map.)
+        if (map.getEdges(division).contains(current)) {
+            player.moveDivision(current);
+        }else {
+            System.out.println("You can't move this division, no connection");
+        }
     }
 
     public void moveDivision(Division division) {
