@@ -13,6 +13,4 @@ public interface Player<T>{
 
     public void useItem(ToCruz player, Item item);
 
-
-
 }

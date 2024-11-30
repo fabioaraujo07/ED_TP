@@ -19,7 +19,6 @@ public class ToCruz<T> implements Player<T> {
         this.bag = new LinkedStack<>();
     }
 
-
     @Override
     public void addItem(Item item) {
         bag.push(item);

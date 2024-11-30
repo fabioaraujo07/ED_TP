@@ -1,5 +1,6 @@
 package Classes;
 
+import Interfaces.Player;
 import Interfaces.Turn;
 
 public class PlayerTurn<T> extends ToCruz implements Turn<T> {
@@ -15,6 +16,13 @@ public class PlayerTurn<T> extends ToCruz implements Turn<T> {
 
     @Override
     public void move(T t, Map map, Division division) {
+        Player player = (Player) t;
+        Division current = player.getCurrentDivision();
 
+        if (map.getEdges(current).contains(division)) {
+            player.moveDivision(division);
+        }else {
+            System.out.println("You can't move this division, no connection");
+        }
     }
 }
