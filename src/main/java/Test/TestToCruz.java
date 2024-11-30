@@ -1,5 +1,6 @@
 package Test;
 
+import Classes.Map;
 import Classes.ToCruz;
 import Classes.Division;
 import Classes.Item;
@@ -10,6 +11,14 @@ public class TestToCruz {
     public static void main(String[] args) {
         // Criar uma divisão inicial
         Division initialDivision = new Division("Heliporto");
+        Division newDivision = new Division("Garagem");
+        Division otherDivision = new Division("Escada2");
+
+        Map map = new Map();
+        map.addVertex(initialDivision);
+        map.addVertex(newDivision);
+        map.addVertex(otherDivision);
+        map.addEdge(initialDivision, newDivision);
 
         // Criar o jogador
         ToCruz<Item> player = new ToCruz<>("John", initialDivision);
@@ -45,8 +54,7 @@ public class TestToCruz {
 
         // Movendo o jogador para uma nova divisão
         System.out.println("\nMovendo o jogador para outra divisão...");
-        Division newDivision = new Division("Garagem");
-        player.moveDivision(newDivision);
+        player.moveDivision(otherDivision);
 
         // Exibir informações após mover o jogador
         System.out.println("\nInformações do jogador após mover de divisão:");

@@ -37,8 +37,8 @@ public class ToCruz<T> implements Player<T> {
     public void movePlayer(ToCruz player, Map map, Division division) {
         Division current = player.getCurrentDivision();
 
-        if (map.getEdges(division).contains(current)) {
-            player.moveDivision(current);
+        if (map.getEdges(current).contains(division)) {
+            player.moveDivision(division);
         }else {
             System.out.println("You can't move this division, no connection");
         }
@@ -46,8 +46,9 @@ public class ToCruz<T> implements Player<T> {
 
     public void moveDivision(Division division) {
         this.currentDivision = division;
-        System.out.println("The division has moved division to the" + currentDivision);
+        System.out.println("Player has moved to the division: " + currentDivision);
     }
+
 
     @Override
     public int LifePointsChanged(int points) {
