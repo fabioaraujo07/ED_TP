@@ -1,18 +1,19 @@
 package Classes;
 
 import Collections.Stack.LinkedStack;
-import Exceptions.ElementNotFound;
 import Exceptions.ItemNotFound;
-import Interfaces.Player;
+import Interfaces.PlayerADT;
 
-public class ToCruz<T> implements Player<T> {
+public class ToCruz<T> implements PlayerADT<T> {
     private String name;
-    private int lifePoints;
+    private int lifePoints, power;
     private Division currentDivision;
     private LinkedStack<Item> bag;
+    private final int POWER = 10;
     private final int INITIAL_LIFE_POINTS = 100;
 
     public ToCruz(String name,Division currentDivision) {
+        this.power = POWER;
         this.name = name;
         this.lifePoints = INITIAL_LIFE_POINTS;
         this.currentDivision = currentDivision;
@@ -66,7 +67,7 @@ public class ToCruz<T> implements Player<T> {
     }
 
     @Override
-    public void atack(Enemy enemy) {
+    public void attack(Enemy enemy) {
 
     }
 
