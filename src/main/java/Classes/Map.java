@@ -32,10 +32,11 @@ public boolean[][] getMatrix(){
     return matrix;
 }
 
+    //Método pa djobi se um divison tem ligason ku kelotu
     public UnorderedArrayList<T> getEdges(T v) throws ElementNotFound {
         int vertex = getIndex(v);
         if (!indexIsValid(vertex)){
-            throw new ElementNotFound("Vertex not found");
+            throw new ElementNotFound("Vertex not valid");
         }
 
         UnorderedArrayList<T> edges = new UnorderedArrayList<>();

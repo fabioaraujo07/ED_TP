@@ -54,28 +54,23 @@ public class LinkedStack<T> implements StackADT<T> {
     }
 
     @Override
-    public String toString() throws EmptyCollectionException {
+    public String toString() {
         if (isEmpty()) {
-            throw new EmptyCollectionException("Stack is empty");
+            return "[]"; // Representação de uma pilha vazia
         }
 
-        String result = "";
-        LinearNode<T> current = top;
-
-        int count = 0;
-
-
+        StringBuilder result = new StringBuilder("[");
+        LinearNode<T> current = top; // Supondo que `top` é o nó superior da pilha
         while (current != null) {
-            result += current.getElement().toString();
+            result.append(current.getElement());
             current = current.getNext();
-
             if (current != null) {
-                result += " ";
+                result.append(", ");
             }
-            count++;
         }
-
-        return result;
+        result.append("]");
+        return result.toString();
     }
+
 
 }

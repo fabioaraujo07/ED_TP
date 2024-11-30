@@ -16,6 +16,7 @@ public class ToCruz<T> implements Player<T> {
         this.name = name;
         this.lifePoints = INITIAL_LIFE_POINTS;
         this.currentDivision = currentDivision;
+        this.bag = new LinkedStack<>();
     }
 
 
