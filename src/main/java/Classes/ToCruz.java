@@ -32,7 +32,7 @@ public class ToCruz<T> implements Player<T> {
         System.out.println("Item removed from the bag");
     }
 
-    // Tem ki djobi inda um lógica midjor
+    // Tem ki djobi inda um lógica midjor, ainda ka sta funciona de midjor forma
     @Override
     public void movePlayer(ToCruz player, Map map, Division division) {
         Division current = player.getCurrentDivision();
