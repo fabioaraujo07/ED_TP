@@ -71,6 +71,11 @@ public class ToCruz<T> implements PlayerADT<T> {
 
     @Override
     public void attack(Enemy enemy) {
+        if (isAlive) {
+            int enemyPoints = enemy.getLifePoints();
+            enemyPoints -= power;
+            enemy.setLifePoints(enemyPoints);
+        }
 
     }
 
