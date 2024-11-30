@@ -33,9 +33,15 @@ public class ToCruz<T> implements Player<T> {
 
     // Tem ki djobi inda um lógica midjor
     @Override
-    public void moveDivision(ToCruz player, Map map, Division division) {
+    public void movePlayer(ToCruz player, Map map, Division division) {
+        Division current = player.getCurrentDivision();
+
+        if (map.)
+    }
+
+    public void moveDivision(Division division) {
         this.currentDivision = division;
-        System.out.println("The player has moved division to the" + currentDivision);
+        System.out.println("The division has moved division to the" + currentDivision);
     }
 
     @Override

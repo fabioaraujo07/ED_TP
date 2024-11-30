@@ -37,7 +37,7 @@ public class Graph<T> implements GraphADT<T> {
         addEdge(getIndex(vertex1), getIndex(vertex2));
     }
 
-    private int getIndex(T vertex) {
+    protected int getIndex(T vertex) {
         for (int i = 0; i < numVertices; i++) {
             if (vertices[i].equals(vertex)) {
                 return i;

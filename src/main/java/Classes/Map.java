@@ -2,6 +2,7 @@ package Classes;
 
 import Collections.Graph.Graph;
 import Collections.Lists.UnorderedArrayList;
+import Exceptions.ElementNotFound;
 
 public class Map<T> extends Graph<T> {
 
@@ -30,6 +31,21 @@ public boolean[][] getMatrix(){
     }
     return matrix;
 }
+
+    public UnorderedArrayList<T> getEdges(T v) throws ElementNotFound {
+        int vertex = getIndex(v);
+        if (!indexIsValid(vertex)){
+            throw new ElementNotFound("Vertex not found");
+        }
+
+        UnorderedArrayList<T> edges = new UnorderedArrayList<>();
+        for (int i = 0; i < numVertices; i++) {
+            if(adjMatrix[vertex][i]){
+                edges.addToRear(vertices[i]);
+            }
+        }
+        return edges;
+    }
 
 public T getVertex(int i){
     if (!indexIsValid(i)){

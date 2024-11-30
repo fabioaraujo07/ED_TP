@@ -11,7 +11,7 @@ public interface Player<T>{
 
     public void removeItem(Item item);
 
-    public void moveDivision(ToCruz player, Map map, Division division);
+    public void movePlayer(ToCruz player, Map map, Division division);
 
     public int LifePointsChanged(int points);
 
