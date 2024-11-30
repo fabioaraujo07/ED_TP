@@ -32,11 +32,11 @@ public class ToCruz<T> implements Player<T> {
 
     // Tem ki djobi inda um lógica midjor, ainda ka sta funciona de midjor forma
     @Override
-    public void movePlayer(ToCruz player, Map map, Division division) {
-        Division current = player.getCurrentDivision();
+    public void movePlayer(Map map, Division division) {
+        Division current = getCurrentDivision();
 
         if (map.getEdges(current).contains(division)) {
-            player.moveDivision(division);
+            moveDivision(division);
         }else {
             System.out.println("You can't move this division, no connection");
         }
