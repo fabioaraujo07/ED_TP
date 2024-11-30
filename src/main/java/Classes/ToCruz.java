@@ -66,6 +66,11 @@ public class ToCruz<T> implements Player<T> {
         }
     }
 
+    @Override
+    public void atack(Enemy enemy) {
+
+    }
+
     public String getName() {
         return name;
     }

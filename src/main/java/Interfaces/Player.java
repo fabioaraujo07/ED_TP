@@ -1,9 +1,6 @@
 package Interfaces;
 
-import Classes.Division;
-import Classes.Item;
-import Classes.Map;
-import Classes.ToCruz;
+import Classes.*;
 
 public interface Player<T>{
 
@@ -13,6 +10,6 @@ public interface Player<T>{
 
     public void useItem(ToCruz player, Item item);
 
-
+    public void atack(Enemy enemy);
 
 }
