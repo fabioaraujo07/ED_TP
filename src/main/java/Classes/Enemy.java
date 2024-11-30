@@ -10,13 +10,14 @@ public class Enemy implements EnemyADT {
     private int power;
     private String name;
     private Division division;
-
+    private boolean isAlive;
 
     public Enemy(int power, String name, Division division) {
         this.division = division;
         this.power = power;
         this.lifePoints = power;
         this.name = name;
+        this.isAlive = true;
     }
 
     public int getPower() {
@@ -52,6 +53,34 @@ public class Enemy implements EnemyADT {
     }
 
     @Override
+    public void moveNPC(ToCruz player, Map map, Division division) {
+
+        Division current = player.getCurrentDivision();
+        if (!current.equals(division)) {
+            if (map.getEdges(this.division).contains(division)) {
+                moveDivision(division);
+            }else {
+                System.out.println("You can't move this division, no connection");
+            }
+        }
+    }
+
+    public void moveDivision(Division division) {
+        this.division = division;
+        System.out.println("Player has moved to the division: " + division);
+    }
+
+    @Override
+    public void attackPlayer(ToCruz player, Map map, Division division) {
+
+        if (isAlive) {
+            int playerPoints = player.getLifePoints();
+            playerPoints -= this.power;
+            player.setLifePoints(playerPoints);
+        }
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Enemy enemy = (Enemy) o;
@@ -65,15 +94,5 @@ public class Enemy implements EnemyADT {
                 ", name='" + name + '\'' +
                 ", division=" + division +
                 '}';
-    }
-
-    @Override
-    public void moveNPC(ToCruz player, Map map, Division division) {
-
-    }
-
-    @Override
-    public void attackPlayer(ToCruz player, Map map, Division division) {
-
     }
 }

@@ -2,12 +2,12 @@ package Test;
 
 import Classes.*;
 import Collections.Lists.LinkedUnorderedList;
-import Import.ImportJason;
+import Import.ImportJSON;
 
-public class ImportJasonTest {
+public class ImportJSONTest {
     public static void main(String[] args) {
 
-        ImportJason imprt = new ImportJason();
+        ImportJSON imprt = new ImportJSON();
         Map<Division> m = new Map<>();
         LinkedUnorderedList<Enemy> e = new LinkedUnorderedList<>();
         LinkedUnorderedList<Item> i = new LinkedUnorderedList<>();

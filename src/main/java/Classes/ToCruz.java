@@ -5,12 +5,14 @@ import Exceptions.ItemNotFound;
 import Interfaces.PlayerADT;
 
 public class ToCruz<T> implements PlayerADT<T> {
+    private final int INITIAL_LIFE_POINTS = 100;
+
     private String name;
     private int lifePoints, power;
     private Division currentDivision;
     private LinkedStack<Item> bag;
     private final int POWER = 10;
-    private final int INITIAL_LIFE_POINTS = 100;
+    private boolean isAlive;
 
     public ToCruz(String name,Division currentDivision) {
         this.power = POWER;
@@ -18,6 +20,7 @@ public class ToCruz<T> implements PlayerADT<T> {
         this.lifePoints = INITIAL_LIFE_POINTS;
         this.currentDivision = currentDivision;
         this.bag = new LinkedStack<>();
+        this.isAlive = true;
     }
 
     @Override
@@ -85,6 +88,14 @@ public class ToCruz<T> implements PlayerADT<T> {
 
     public LinkedStack<Item> getBag() {
         return bag;
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+    public void setLifePoints(int lifePoints) {
+        this.lifePoints = lifePoints;
     }
 
     @Override

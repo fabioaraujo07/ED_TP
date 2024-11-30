@@ -13,6 +13,8 @@ public class TestToCruz {
         Division initialDivision = new Division("Heliporto");
         Division newDivision = new Division("Garagem");
         Division otherDivision = new Division("Escada2");
+        Division otherDivision2 = new Division("Escada3");
+
 
         Map map = new Map();
         map.addVertex(initialDivision);
@@ -55,6 +57,14 @@ public class TestToCruz {
         // Movendo o jogador para uma nova divisão
         System.out.println("\nMovendo o jogador para outra divisão...");
         player.moveDivision(otherDivision);
+
+        // Exibir informações após mover o jogador
+        System.out.println("\nInformações do jogador após mover de divisão:");
+        System.out.println(player);
+
+        // Movendo o jogador para uma nova divisão
+        System.out.println("\nMovendo o jogador para outra divisão...");
+        player.moveDivision(otherDivision2);
 
         // Exibir informações após mover o jogador
         System.out.println("\nInformações do jogador após mover de divisão:");

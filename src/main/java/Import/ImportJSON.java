@@ -8,14 +8,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class ImportJason {
+public class ImportJSON {
 
-    public ImportJason() {
+    public ImportJSON() {
     }
 
     public Map<Division> importBuilding(String filepath) {
