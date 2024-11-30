@@ -1,13 +1,15 @@
 package Import;
 
-import Classes.Division;
-import Classes.Map;
-import Exceptions.DivisionNotFound;
+import Classes.*;
+import Collections.Lists.LinkedUnorderedList;
+import Enumerations.Items;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -16,7 +18,7 @@ public class ImportJason {
     public ImportJason() {
     }
 
-    public Map<Division> importJason(String filepath) {
+    public Map<Division> importBuilding(String filepath) {
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader fileReader = new FileReader(filepath)) {
@@ -42,7 +44,7 @@ public class ImportJason {
                 Division origemDivision = findDivisionByName(map, origemName);
                 Division destinoDivision = findDivisionByName(map, destinoName);
 
-                    map.addEdge(origemDivision, destinoDivision);
+                map.addEdge(origemDivision, destinoDivision);
             }
 
             return map;
@@ -51,12 +53,94 @@ public class ImportJason {
         }
     }
 
-    private Division findDivisionByName(Map<Division> map, String name) throws DivisionNotFound {
+    public LinkedUnorderedList<Enemy> importEnemy(String filepath) {
+        JSONParser jsonParser = new JSONParser();
+
+        try (FileReader fileReader = new FileReader(filepath)){
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(fileReader);
+
+            JSONArray enemiesArray = (JSONArray) jsonObject.get("inimigos");
+            LinkedUnorderedList<Enemy> enemies = new LinkedUnorderedList<>();
+
+            for (int i = 0; i < enemiesArray.size(); i++) {
+                JSONObject toObject = (JSONObject) enemiesArray.get(i);
+
+                String name = (String) toObject.get("nome");
+                long power = (long) toObject.get("poder");
+                String divisionName = (String) toObject.get("divisao");
+                Division division = new Division(divisionName);
+
+                Enemy enemy = new Enemy( (int) power, name, division);
+                enemies.addToFront(enemy);
+            }
+
+            return enemies;
+        } catch (IOException | ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Goal importGoal(String filepath) {
+        JSONParser jsonParser = new JSONParser();
+
+        try (FileReader fileReader = new FileReader(filepath)){
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(fileReader);
+
+            JSONObject enemiesArray = (JSONObject) jsonObject.get("alvo");
+            String tipo = (String) enemiesArray.get("tipo");
+            String divisionName = (String) enemiesArray.get("divisao");
+            Division division = new Division(divisionName);
+
+            Goal goal = new Goal(division, tipo);
+            return goal;
+        } catch (IOException | ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public LinkedUnorderedList<Item> importItems(String filepath) {
+        JSONParser jsonParser = new JSONParser();
+
+        try (FileReader fileReader = new FileReader(filepath)){
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(fileReader);
+
+            JSONArray itemsArray = (JSONArray) jsonObject.get("itens");
+            LinkedUnorderedList<Item> items = new LinkedUnorderedList<>();
+
+            for (int i = 0; i < itemsArray.size(); i++) {
+                JSONObject toObject = (JSONObject) itemsArray.get(i);
+
+                Items it = null;
+                long points = 0;
+                switch ((String) toObject.get("tipo")) {
+                    case "kit de vida":
+                        it = Items.KIT_VIDA;
+                        points = (long) toObject.get("pontos-recuperados");
+                        break;
+                    default:
+                        it = Items.COLETE;
+                        points = (long) toObject.get("pontos-extra");
+
+                }
+                String divisionName = (String) toObject.get("divisao");
+                Division division = new Division(divisionName);
+
+                Item item = new Item( division, it, (int) points);
+                items.addToFront(item);
+            }
+
+            return items;
+        } catch (IOException | ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Division findDivisionByName(Map<Division> map, String name) {
         for (int i = 0; i < map.getNumVertices(); i++) {
             if (map.getVertex(i).getName().equals(name)) {
                 return map.getVertex(i);
             }
         }
-        throw new DivisionNotFound(name);
+        return null;
     }
 }

@@ -3,10 +3,10 @@ import Enumerations.Items;
 
 public class Item {
     private Division division;
-    private String items;
+    private Items items;
     private int points;
 
-    public Item (Division division, String items, int points) {
+    public Item (Division division, Items items, int points) {
         this.division = division;
         this.items = items;
         this.points = points;
@@ -20,11 +20,11 @@ public class Item {
         this.division = division;
     }
 
-    public String getItems() {
+    public Items getItems() {
         return items;
     }
 
-    public void setItems(String items) {
+    public void setItems(Items items) {
         this.items = items;
     }
 
@@ -34,6 +34,15 @@ public class Item {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "division=" + division +
+                ", items=" + items +
+                ", points=" + points +
+                '}';
     }
 }
 

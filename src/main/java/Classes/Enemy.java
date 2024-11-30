@@ -42,6 +42,7 @@ public class Enemy {
         return "Enemy{" +
                 "power=" + power +
                 ", name='" + name + '\'' +
+                ", division=" + division +
                 '}';
     }
 }
