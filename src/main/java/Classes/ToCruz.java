@@ -1,6 +1,8 @@
 package Classes;
 
 import Collections.Stack.LinkedStack;
+import Exceptions.ElementNotFound;
+import Exceptions.ItemNotFound;
 import Interfaces.Player;
 
 public class ToCruz<T> implements Player<T> {
@@ -37,8 +39,22 @@ public class ToCruz<T> implements Player<T> {
     }
 
     @Override
-    public void LifePointsChanged() {
+    public int LifePointsChanged(int points) {
+        this.lifePoints += points;
+        System.out.println("The life points changed to " + lifePoints);
+        return lifePoints;
+    }
 
+    @Override
+    public void useItem(ToCruz player, Item item) throws ItemNotFound {
+        if (player.getBag().peek().equals(item)) {
+            player.LifePointsChanged(item.getPoints());
+
+            player.removeItem(item);
+            System.out.println("Player has used the item " + item);
+        }else {
+            throw new ItemNotFound("Item not found");
+        }
     }
 
     public String getName() {

@@ -13,7 +13,9 @@ public interface Player<T>{
 
     public void moveDivision(ToCruz player, Map map, Division division);
 
-    public void LifePointsChanged();
+    public int LifePointsChanged(int points);
+
+    public void useItem(ToCruz player, Item item);
 
 
 
