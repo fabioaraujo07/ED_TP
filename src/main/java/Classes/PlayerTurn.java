@@ -16,7 +16,7 @@ public class PlayerTurn<T> extends ToCruz implements Turn<T> {
 
     @Override
     public void move(T t, Map map, Division division) {
-        Player player = (Player) t;
+        ToCruz player = (ToCruz) t;
         Division current = player.getCurrentDivision();
 
         if (map.getEdges(current).contains(division)) {
