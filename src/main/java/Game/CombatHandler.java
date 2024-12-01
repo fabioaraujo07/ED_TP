@@ -2,6 +2,7 @@ package Game;
 
 import Classes.*;
 import Collections.Lists.LinkedUnorderedList;
+import Collections.Lists.UnorderedArrayList;
 
 public class CombatHandler {
 
@@ -35,6 +36,19 @@ public class CombatHandler {
                 enemy.attackPlayer(player);
                 System.out.println(enemy.getName() + "attacked causing" + enemy.getPower() + "damage to To Cruz");
             }
+
+            for (Enemy enemy: building.getEnemies()){
+                if (!enemy.getDivision().equals(player.getCurrentDivision()) && enemy.isAlive()){
+                    Division randomNeighbor = getRandomNeighbor(building, enemy.getDivision()) ;
+                    if (randomNeighbor != null){
+                        enemy.setDivision(randomNeighbor);
+                    }
+                }
+            }
+        }
+
+        if (!player.isAlive()){
+            System.out.println("Player is dead");
         }
 
     }
@@ -48,4 +62,22 @@ public class CombatHandler {
         }
         return enemiesInDivision;
     }
+
+    private Division getRandomNeighbor(Building building, Division currentDivision){
+        LinkedUnorderedList<Division> neighbors = building.getMap().getEdges(currentDivision);
+        if (neighbors.isEmpty()){
+            return null; // colocar exceção
+        }
+        int randomIndex = (int) (Math.random() * neighbors.size());
+        int currentIndex = 0;
+
+        for (Division division: neighbors){
+            if (currentIndex == randomIndex){
+                return division;
+            }
+            currentIndex++;
+        }
+        return null;
+    }
+
 }

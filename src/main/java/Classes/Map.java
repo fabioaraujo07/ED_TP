@@ -1,6 +1,7 @@
 package Classes;
 
 import Collections.Graph.Graph;
+import Collections.Lists.LinkedUnorderedList;
 import Collections.Lists.UnorderedArrayList;
 import Exceptions.ElementNotFound;
 
@@ -33,13 +34,13 @@ public boolean[][] getMatrix(){
 }
 
     //Método pa djobi se um divison tem ligason ku kelotu
-    public UnorderedArrayList<T> getEdges(T v) throws ElementNotFound {
+    public LinkedUnorderedList<T> getEdges(T v) throws ElementNotFound {
         int vertex = getIndex(v);
         if (!indexIsValid(vertex)){
             throw new ElementNotFound("Vertex not valid");
         }
 
-        UnorderedArrayList<T> edges = new UnorderedArrayList<>();
+        LinkedUnorderedList<T> edges = new LinkedUnorderedList<>();
         for (int i = 0; i < numVertices; i++) {
             if(adjMatrix[vertex][i]){
                 edges.addToRear(vertices[i]);
