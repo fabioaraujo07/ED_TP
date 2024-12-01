@@ -14,19 +14,22 @@ public class ImportJSONTest {
         LinkedUnorderedList<Division> io = new LinkedUnorderedList<>();
         String file = "src/main/resources/Missão.json";
 
-        m = imprt.importBuilding(file);
+        Building building = new Building(file);
+        System.out.printf(building.toString());
+
+        m = building.getMap();
         System.out.println(m);
 
-        e = imprt.importEnemy(file);
+        e = building.getEnemies();
         System.out.println(e);
 
-        i = imprt.importItems(file);
+        i = building.getItems();
         System.out.println(i);
 
-        Goal g = imprt.importGoal(file);
+        Goal g = building.getGoal();
         System.out.println(g);
 
-        io = imprt.importInAndOut(file);
+        io = building.getInAndOut();
         System.out.println(io);
     }
 }

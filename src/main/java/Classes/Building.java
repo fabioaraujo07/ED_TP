@@ -72,4 +72,15 @@ public class Building {
         }
         return tmp;
     }
+
+    @Override
+    public String toString() {
+        return "Building{" +
+                ", goal=" + goal +
+                ", map=" + map +
+                ", enemies=" + enemies +
+                ", items=" + items +
+                ", inAndOut=" + inAndOut +
+                '}';
+    }
 }
