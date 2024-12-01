@@ -103,6 +103,14 @@ public class ToCruz<T> implements PlayerADT<T> {
         this.lifePoints = lifePoints;
     }
 
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public void setAlive(boolean alive) {
+        isAlive = alive;
+    }
+
     @Override
     public String toString() {
         return "Player{" +

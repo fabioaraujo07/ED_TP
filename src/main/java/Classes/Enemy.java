@@ -80,6 +80,14 @@ public class Enemy implements EnemyADT {
         }
     }
 
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public void setAlive(boolean alive) {
+        isAlive = alive;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
