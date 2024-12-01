@@ -8,17 +8,24 @@ import java.util.LinkedHashMap;
 public class Building {
 
     ImportJSON imprt;
+    Goal goal;
     Map<Division> map;
     LinkedUnorderedList<Enemy> enemies;
     LinkedUnorderedList<Item> items;
     LinkedUnorderedList<Division> inAndOut;
 
     public Building(String file) {
+
         this.imprt = new ImportJSON();
+        this.goal = imprt.importGoal(file);
         this.map = imprt.importBuilding(file);
         this.enemies = imprt.importEnemy(file);
         this.items = imprt.importItems(file);
         this.inAndOut = imprt.importInAndOut(file);
+    }
+
+    public Goal getGoal() {
+        return this.goal;
     }
 
     public Map<Division> getMap() {
