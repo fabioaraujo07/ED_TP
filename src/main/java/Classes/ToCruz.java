@@ -75,6 +75,9 @@ public class ToCruz<T> implements PlayerADT<T> {
             int enemyPoints = enemy.getLifePoints();
             enemyPoints -= power;
             enemy.setLifePoints(enemyPoints);
+            if (enemy.getLifePoints() <= 0){
+                enemy.setAlive(false);
+            }
         }
 
     }

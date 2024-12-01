@@ -72,11 +72,13 @@ public class Enemy implements EnemyADT {
 
     @Override
     public void attackPlayer(ToCruz player) {
-
         if (isAlive) {
             int playerPoints = player.getLifePoints();
             playerPoints -= this.power;
             player.setLifePoints(playerPoints);
+            if (player.getLifePoints() <= 0) {
+                player.setAlive(false);
+            }
         }
     }
 
