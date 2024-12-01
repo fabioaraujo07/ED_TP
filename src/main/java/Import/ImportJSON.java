@@ -14,6 +14,7 @@ import java.io.IOException;
 public class ImportJSON {
 
     public ImportJSON() {
+
     }
 
     public Map<Division> importBuilding(String filepath) {
@@ -128,6 +129,27 @@ public class ImportJSON {
             }
 
             return items;
+        } catch (IOException | ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public LinkedUnorderedList<Division> importInAndOut(String filepath) {
+        JSONParser jsonParser = new JSONParser();
+
+        try (FileReader fileReader = new FileReader(filepath)) {
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(fileReader);
+
+            LinkedUnorderedList<Division> inAndOut = new LinkedUnorderedList<>();
+            JSONArray entrada_saida = (JSONArray) jsonObject.get("entradas-saidas");
+
+            for (int i = 0; i < entrada_saida.size(); i++) {
+                String divisionName = (String) entrada_saida.get(i);
+                Division division = new Division(divisionName);
+                inAndOut.addToFront(division);
+            }
+
+            return inAndOut;
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }

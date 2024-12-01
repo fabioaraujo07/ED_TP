@@ -8,9 +8,10 @@ public class ImportJSONTest {
     public static void main(String[] args) {
 
         ImportJSON imprt = new ImportJSON();
-        Map<Division> m = new Map<>();
+        Map<Division> m;
         LinkedUnorderedList<Enemy> e = new LinkedUnorderedList<>();
         LinkedUnorderedList<Item> i = new LinkedUnorderedList<>();
+        LinkedUnorderedList<Division> io = new LinkedUnorderedList<>();
         String file = "src/main/resources/Missão.json";
 
         m = imprt.importBuilding(file);
@@ -24,5 +25,8 @@ public class ImportJSONTest {
 
         Goal g = imprt.importGoal(file);
         System.out.println(g);
+
+        io = imprt.importInAndOut(file);
+        System.out.println(io);
     }
 }
