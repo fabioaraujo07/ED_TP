@@ -10,47 +10,47 @@ public class Mission {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Bem-vindo ao jogo Improbable Mission!");
-        System.out.print("Insira o caminho para o arquivo do cenário: ");
+        System.out.println("Welcome to the Improbable Mission game!");
+        System.out.print("Please enter the path to the scenario file: ");
         String filepath = scanner.nextLine();
-
-
 
         Building building = new Building(filepath);
         Goal goal = building.getGoal();
-        Division startDivision = building.getInAndOut().last();
+        Division startDivision = building.getInAndOut().first();
         ToCruz player = new ToCruz("Tó Cruz", startDivision);
 
-        System.out.println("Divisões registradas no grafo:");
+        System.out.println("\nRegistered divisions in the graph:");
         for (Division division : building.getMap().getVertexes()) {
             System.out.println("- " + division.getName());
         }
 
-
         CombatHandler combatHandler = new CombatHandler();
 
-        System.out.println("\nJogo iniciado!");
-        System.out.println("Você está na divisão: " + startDivision.getName());
-        System.out.println("Objetivo: " + goal.getType() + " na divisão " + goal.getDivision().getName());
+
+        System.out.println("\nGame has started!");
+        System.out.println("You are currently in the division: " + startDivision.getName());
+        System.out.println("Objective: " + goal.getType() + " in the division " + goal.getDivision().getName());
 
         boolean gameRunning = true;
 
+
         while (gameRunning) {
             System.out.println("\n--------------------------------------");
-            System.out.println("Divisão atual: " + player.getCurrentDivision().getName());
-            System.out.println("Vida: " + player.getLifePoints());
-            System.out.println("Itens na mochila: " + player.getBag().size());
+            System.out.println("Current Division: " + player.getCurrentDivision().getName());
+            System.out.println("Health: " + player.getLifePoints());
+            System.out.println("Items in the Bag: " + player.getBag().size());
             System.out.println("--------------------------------------");
-            System.out.println("Escolha uma ação:");
-            System.out.println("1. Mover-se para outra divisão");
-            System.out.println("2. Atacar inimigos (Cenário 1)");
-            System.out.println("3. Usar item (Cenário 4)");
-            System.out.println("4. Procurar o objetivo (Cenário 5 ou 6)");
-            System.out.println("5. Passar turno (Cenário 2)");
-            System.out.println("6. Sair do jogo");
+            System.out.println("Choose an action:");
+            System.out.println("1. Move to another division");
+            System.out.println("2. Attack enemies (Scenario 1)");
+            System.out.println("3. Use an item (Scenario 4)");
+            System.out.println("4. Search for the objective (Scenario 5 or 6)");
+            System.out.println("5. End turn (Scenario 2)");
+            System.out.println("6. Exit the game");
+
 
             Division currentDivision = player.getCurrentDivision();
-            System.out.println("Divisões conectadas:");
+            System.out.println("Connected divisions:");
             for (Division neighbor : building.getMap().getEdges(currentDivision)) {
                 System.out.println("- " + neighbor.getName());
             }
@@ -61,57 +61,65 @@ public class Mission {
 
             switch (choice) {
                 case 1:
-                    System.out.println("Divisões conectadas:");
+
+                    System.out.println("Connected divisions:");
                     for (Division neighbor : building.getMap().getEdges(player.getCurrentDivision())) {
                         System.out.println("- " + neighbor.getName());
                     }
-                    System.out.print("Digite o nome da divisão: ");
+                    System.out.print("Enter the name of the division: ");
                     String divisionName = scanner.nextLine();
                     Division targetDivision = findDivisionByName(building, divisionName);
                     if (targetDivision != null) {
                         player.movePlayer(building.getMap(), targetDivision);
                     } else {
-                        System.out.println("Divisão inválida.");
+                        System.out.println("Invalid division.");
                     }
                     break;
 
                 case 2:
+
                     combatHandler.scenario1(player, building);
                     break;
 
                 case 3:
+
                     combatHandler.scenario4(player, building);
                     break;
 
                 case 4:
+
                     if (player.getCurrentDivision().equals(goal.getDivision())) {
                         combatHandler.scenario6(player, building, goal);
                     } else {
-                        System.out.println("Você ainda não está na divisão do objetivo.");
+                        System.out.println("You are not in the objective division yet.");
                     }
                     break;
 
                 case 5:
+
                     combatHandler.scenario2(player, building);
                     break;
 
                 case 6:
-                    System.out.println("Saindo do jogo. Até a próxima!");
+
+                    System.out.println("Exiting the game. See you next time!");
                     gameRunning = false;
                     break;
 
                 default:
-                    System.out.println("Opção inválida.");
+                    System.out.println("Invalid option. Please try again.");
             }
 
+
             if (!player.isAlive()) {
-                System.out.println("Tó Cruz morreu. Fim de jogo.");
+                System.out.println("Tó Cruz has died. Game over.");
                 gameRunning = false;
             } else if (goal.isRequired() && player.getCurrentDivision().equals(building.getInAndOut().last())) {
-                System.out.println("Parabéns! Você concluiu a missão com sucesso!");
+                System.out.println("Congratulations! You have successfully completed the mission!");
                 gameRunning = false;
             }
         }
+
 
         scanner.close();
     }
@@ -125,4 +133,3 @@ public class Mission {
         return null;
     }
 }
-
