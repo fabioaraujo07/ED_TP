@@ -157,4 +157,61 @@ public class CombatHandler {
         scenario3(player, building);
     }
 
+    public void scenario5(ToCruz player, Building building, Goal goal){
+
+        if (!player.getCurrentDivision().equals(goal.getDivision())){
+            System.out.println("Tó Cruz did not found the goal yet");
+        }
+
+        System.out.println("To Cruz did found the goal");
+
+        LinkedUnorderedList<Enemy> enemies = getEnemiesInDivision(player, building.getEnemies());
+
+        if (enemies.isEmpty()){
+            System.out.println("No enemies entered, To Cruz interact with goal");
+            interactWithGoal(player, goal);
+            return;
+        }
+
+        System.out.println("Enemies in the division");
+        scenario1(player, building);
+
+        if (enemies.isEmpty()){
+            System.out.println("No enemies entered, To Cruz interact with goal");
+            interactWithGoal(player, goal);
+            return;
+        }
+
+    }
+
+    public void scenario6(ToCruz player, Building building, Goal goal){
+        if (!player.getCurrentDivision().equals(goal.getDivision())){
+            System.out.println("Tó Cruz did not found the goal yet");
+        }
+
+        LinkedUnorderedList<Enemy> currentEnemies = getEnemiesInDivision(player, building.getEnemies());
+
+        if (!currentEnemies.isEmpty()) {
+            System.out.println("Enemies in the division");
+            scenario1(player, building);
+            return;
+        }
+
+        System.out.println("No enemies in the division, To Cruz interact with goal");
+        interactWithGoal(player, goal);
+
+        if (player.isAlive()) {
+            System.out.println("Mission Completed");
+        } else {
+            System.out.println("Tó Cruz is dead");
+        }
+
+    }
+
+    private void interactWithGoal(ToCruz player, Goal goal){
+        System.out.println(player.getName() + " interact with goal" + goal.getType());
+        goal.setRequired(true);
+        System.out.println("Alvo: " + goal.getType() + " required with success");
+    }
+
 }

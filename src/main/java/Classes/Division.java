@@ -33,12 +33,9 @@ public class Division {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null){
-            return false;
-        }
-        if (!(o instanceof Division)) return false;
+        if (o == null || !(o instanceof Division)) return false;
         Division division = (Division) o;
-        return id == division.id;
+        return name.equalsIgnoreCase(division.name);
     }
 
     @Override
