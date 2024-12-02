@@ -6,7 +6,7 @@ import Collections.Lists.UnorderedArrayList;
 
 public class CombatHandler {
 
-    public void Scenario1(ToCruz player, Building building){
+    public void scenario1(ToCruz player, Building building){
 
         LinkedUnorderedList<Enemy> currentEnemies = getEnemiesInDivision(player, building.getEnemies());
 
@@ -78,6 +78,83 @@ public class CombatHandler {
             currentIndex++;
         }
         return null;
+    }
+
+    public void scenario2(ToCruz player, Building building){
+
+        LinkedUnorderedList<Enemy> enemies = getEnemiesInDivision(player, building.getEnemies());
+
+        if (enemies.isEmpty()){
+            for (Enemy enemy: building.getEnemies()){
+                if (enemy.isAlive()){
+                    Division randomNeighbor = getRandomNeighbor(building, enemy.getDivision());
+                    if (randomNeighbor != null){
+                        System.out.println(enemy.getName() + " moved from " + enemy.getDivision().getName() + " to " + randomNeighbor.getName());
+                        enemy.setDivision(randomNeighbor);
+                    }
+                }
+            }
+        }else {
+            scenario1(player, building);
+        }
+    }
+
+    public void scenario3(ToCruz player, Building building){
+
+        for (Enemy enemy : building.getEnemies()){
+            if (enemy.isAlive()){
+                Division randomNeighbor = getRandomNeighbor(building, enemy.getDivision());
+                if (randomNeighbor != null){
+                    enemy.setDivision(randomNeighbor);
+                }
+            }
+        }
+
+        LinkedUnorderedList<Enemy> currentEnemies = getEnemiesInDivision(player, building.getEnemies());
+
+        if (!currentEnemies.isEmpty()){
+            System.out.println("Enemies enter in" + player.getCurrentDivision());
+            for (Enemy enemy: currentEnemies){
+                enemy.attackPlayer(player);
+                System.out.println(enemy.getName() + "attack causing" + enemy.getPower() + "damage to To Cruz");
+            }
+
+            if (!player.isAlive()){
+                System.out.println("Player is dead");
+                return;
+            }
+
+            System.out.println(player.getName() + "Counter-attack");
+            for (Enemy enemy : currentEnemies){
+                player.attack(enemy);
+                System.out.println(player.getName() + " attack " + enemy.getName() + ", enemy life: " + enemy.getLifePoints());
+            }
+
+            for (Enemy enemy: currentEnemies){
+                if (!enemy.isAlive()){
+                    currentEnemies.remove(enemy);
+                    System.out.println(enemy.getName() + "is dead");
+                }
+            }
+        }else{
+            System.out.println("No enemies entered");
+        }
+
+    }
+
+    public void scenario4(ToCruz player, Building building){
+
+        if (!player.getBag().isEmpty()){
+
+            Item item = (Item) player.getBag().pop();
+            player.useItem(player, item);
+            System.out.println(player.getName() + "used a life kit and restored health");
+            return;
+        }else {
+            System.out.println("No life kits in the bag");
+        }
+
+        scenario3(player, building);
     }
 
 }
