@@ -63,6 +63,8 @@ public class CombatHandler {
         return enemiesInDivision;
     }
 
+
+    // Esse método tem de ser verifacado de modo que tem que ser até duas divisões a partir da sua posição
     private Division getRandomNeighbor(Building building, Division currentDivision){
         LinkedUnorderedList<Division> neighbors = building.getMap().getEdges(currentDivision);
         if (neighbors.isEmpty()){
