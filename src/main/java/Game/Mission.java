@@ -11,8 +11,7 @@ public class Mission {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Welcome to the Improbable Mission game!");
-        System.out.print("Please enter the path to the scenario file: ");
-        String filepath = scanner.nextLine();
+        String filepath = "C:\\Users\\fabio\\OneDrive\\Área de Trabalho\\TP_ED\\src\\main\\resources\\Missão.json";
 
         Building building = new Building(filepath);
         Goal goal = building.getGoal();
