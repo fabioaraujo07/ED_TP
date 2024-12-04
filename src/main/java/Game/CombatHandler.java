@@ -2,220 +2,230 @@ package Game;
 
 import Classes.*;
 import Collections.Lists.LinkedUnorderedList;
-import Collections.Lists.UnorderedArrayList;
 import Exceptions.InvalidAction;
+
+import java.util.Iterator;
 
 public class CombatHandler {
 
+    // Cenário 1: Ataque de inimigos
     public void scenario1(ToCruz player, Building building) {
+        Division currentDivision = player.getCurrentDivision();
+        LinkedUnorderedList<Enemy> currentEnemies = currentDivision.getEnemies();
 
-        LinkedUnorderedList<Enemy> currentEnemies = getEnemiesInDivision(player, building.getEnemies());
-
-        if (currentEnemies.isEmpty()){
-            throw new InvalidAction("No enemies to atack");
+        if (currentEnemies.isEmpty()) {
+            throw new InvalidAction("No enemies to attack in the current division.");
         }
 
-        for (Enemy enemy: currentEnemies){
+        // Player attacks enemies
+        for (Enemy enemy : currentEnemies) {
             player.attack(enemy);
-            System.out.println(player.getName() + "attacked" + enemy.getName() + "remaining life: " + enemy.getLifePoints());
+            System.out.println(player.getName() + " attacked " + enemy.getName() + ". Remaining life: " + enemy.getLifePoints());
         }
 
-        for (Enemy enemy : currentEnemies){
-            if (!enemy.isAlive()){
-                currentEnemies.remove(enemy);
-                System.out.println(enemy.getName() + "was defeated!");
+        // Remove defeated enemies
+        Iterator<Enemy> iterator = currentEnemies.iterator();
+        while (iterator.hasNext()) {
+            Enemy enemy = iterator.next();
+            if (!enemy.isAlive()) {
+                iterator.remove();
+                System.out.println(enemy.getName() + " was defeated!");
             }
         }
 
-        if(!currentEnemies.isEmpty()){
-            System.out.println(currentEnemies.size() + " enemie(s) attacking");
-            for (Enemy enemy: currentEnemies){
+        // Enemies counter-attack
+        if (!currentEnemies.isEmpty()) {
+            System.out.println(currentEnemies.size() + " enemy(s) are counter-attacking!");
+            for (Enemy enemy : currentEnemies) {
                 enemy.attackPlayer(player);
-                System.out.println(enemy.getName() + "attacked causing" + enemy.getPower() + "damage to To Cruz");
+                System.out.println(enemy.getName() + " attacked causing " + enemy.getPower() + " damage to To Cruz.");
             }
             moveEnemy(player, building);
         }
 
-        if (!player.isAlive()){
-            System.out.println("Player is dead");
+        if (!player.isAlive()) {
+            System.out.println("Player is dead. Game over.");
         }
-
     }
 
-    public LinkedUnorderedList<Enemy> getEnemiesInDivision(ToCruz player, LinkedUnorderedList<Enemy> allEnemies) {
-        LinkedUnorderedList<Enemy> enemiesInDivision = new LinkedUnorderedList<>();
-        for (Enemy enemy: allEnemies){
-            if (enemy.getDivision().equals(player.getCurrentDivision()) && enemy.isAlive()){
-                enemiesInDivision.addToRear(enemy);
-            }
-        }
-        return enemiesInDivision;
-    }
-
-    private Division getRandomNeighbor(Building building, Division currentDivision) {
-        LinkedUnorderedList<Division> neighbors = building.getMap().getEdges(currentDivision);
-        if (neighbors.isEmpty()){
-            return null; // colocar exceção
-        }
-        int randomIndex = (int) (Math.random() * neighbors.size());
-        int currentIndex = 0;
-
-        for (Division division: neighbors){
-            if (currentIndex == randomIndex){
-                return division;
-            }
-            currentIndex++;
-        }
-        return null;
-    }
-
-    public void scenario2(ToCruz player, Building building, LinkedUnorderedList<Division> neighbors, int option) throws InvalidAction{
-
+    // Cenário 2: Movimentação do jogador
+    public void scenario2(ToCruz player, Building building, LinkedUnorderedList<Division> neighbors, int option) throws InvalidAction {
         Division targetDivision = findDivisionByOption(neighbors, option);
-        if (targetDivision != null) {
-            player.movePlayer(building.getMap(), targetDivision);
-        } else {
-            throw new InvalidAction("Invalid option selected");
+
+        if (targetDivision == null) {
+            throw new InvalidAction("Invalid option selected. No movement occurred.");
         }
+
+        player.movePlayer(building.getMap(), targetDivision);
         moveEnemy(player, building);
     }
 
-    private static Division findDivisionByOption(LinkedUnorderedList<Division> neighbors, int option) {
-        int i = 1;
-        for (Division division : neighbors) {
-            if (i == option) {
-                return division;
-            }
-            else {
-                i++;
-            }
-        }
-        return null;
-    }
-
-    private void moveEnemy(ToCruz player, Building building) {
-        for (Enemy enemy: building.getEnemies()){
-            if (enemy.isAlive() && !enemy.getDivision().equals(player.getCurrentDivision())){
-                Division randomNeighbor = getRandomNeighbor(building, enemy.getDivision());
-                if (randomNeighbor != null){
-                    System.out.println(enemy.getName() + " moved from " + enemy.getDivision().getName() + " to " + randomNeighbor.getName());
-                    enemy.setDivision(randomNeighbor);
-                }
-            }
-        }
-
-        scenario3(player, building);
-    }
-
-    public void scenario3(ToCruz player, Building building){
-
-        for (Enemy enemy : building.getEnemies()){
-            if (enemy.isAlive() && !enemy.getDivision().equals(player.getCurrentDivision())){
-                Division randomNeighbor = getRandomNeighbor(building, enemy.getDivision());
-                if (randomNeighbor != null){
-                    enemy.setDivision(randomNeighbor);
-                }
-            }
-        }
-
-        LinkedUnorderedList<Enemy> currentEnemies = getEnemiesInDivision(player, building.getEnemies());
-
-        if (!currentEnemies.isEmpty()){
-            System.out.println("Enemies enter in" + player.getCurrentDivision());
-            for (Enemy enemy: currentEnemies){
-                enemy.attackPlayer(player);
-                System.out.println(enemy.getName() + "attack causing" + enemy.getPower() + "damage to To Cruz");
-            }
-
-            if (!player.isAlive()){
-                System.out.println("Player is dead");
-                return;
-            }
-
-            System.out.println(player.getName() + "Counter-attack");
-            for (Enemy enemy : currentEnemies){
-                player.attack(enemy);
-                System.out.println(player.getName() + " attack " + enemy.getName() + ", enemy life: " + enemy.getLifePoints());
-            }
-
-            for (Enemy enemy: currentEnemies){
-                if (!enemy.isAlive()){
-                    currentEnemies.remove(enemy);
-                    System.out.println(enemy.getName() + "is dead");
+    // Cenário 3: Movimentação dos inimigos
+    public void scenario3(ToCruz player, Building building) {
+        for (Division division : building.getMap().getVertexes()) {
+            LinkedUnorderedList<Enemy> enemies = division.getEnemies();
+            for (Enemy enemy : enemies) {
+                if (enemy.isAlive() && !division.equals(player.getCurrentDivision())) {
+                    Division randomNeighbor = getRandomDivision(division, building);
+                    if (randomNeighbor != null) {
+                        division.removeEnemy(enemy);
+                        randomNeighbor.addEnemy(enemy);
+                        System.out.println(enemy.getName() + " moved from " + division.getName() + " to " + randomNeighbor.getName());
+                    }
                 }
             }
         }
     }
 
+    // Cenário 4: Uso de item pelo jogador
     public void scenario4(ToCruz player, Building building) {
-
-        if (!player.getBag().isEmpty()) {
-
-            Item item = (Item) player.getBag().pop();
-            player.useItem(player, item);
-            System.out.println(player.getName() + "used a life kit and restored health");
-            moveEnemy(player, building);
+        if (player.getBag().isEmpty()) {
+            throw new InvalidAction("No items available in the bag.");
         }
-        else {
-            throw new InvalidAction("No life kits in the bag");
-        }
+
+        Item item = (Item) player.getBag().pop();
+        player.useItem(player, item);
+        System.out.println(player.getName() + " used " + item.getItems() + " and restored health.");
+        moveEnemy(player, building);
     }
 
+    // Cenário 5: Jogador encontra o objetivo, mas há inimigos
     public void scenario5(ToCruz player, Building building, Goal goal) {
-
-        if (!player.getCurrentDivision().equals(goal.getDivision())){
-            System.out.println("Tó Cruz did not found the goal yet");
-        }
-
-        System.out.println("To Cruz did found the goal");
-
-        LinkedUnorderedList<Enemy> enemies = getEnemiesInDivision(player, building.getEnemies());
-
-        if (enemies.isEmpty()){
-            System.out.println("No enemies entered, To Cruz interact with goal");
-            interactWithGoal(player, goal);
+        if (!player.getCurrentDivision().equals(goal.getDivision())) {
+            System.out.println("To Cruz has not found the goal yet.");
             return;
         }
 
-        System.out.println("Enemies in the division");
-        scenario1(player, building);
-
-        if (enemies.isEmpty()){
-            System.out.println("No enemies entered, To Cruz interact with goal");
-            interactWithGoal(player, goal);
-            return;
+        LinkedUnorderedList<Enemy> enemies = player.getCurrentDivision().getEnemies();
+        if (!enemies.isEmpty()) {
+            System.out.println("Enemies in the division. Clearing the area first.");
+            scenario1(player, building);
         }
 
+        if (enemies.isEmpty()) {
+            interactWithGoal(player, goal);
+        }
     }
 
+    // Cenário 6: Jogador encontra o objetivo sem inimigos
     public void scenario6(ToCruz player, Building building, Goal goal) {
         if (!player.getCurrentDivision().equals(goal.getDivision())) {
-            System.out.println("Tó Cruz did not found the goal yet");
+            System.out.println("To Cruz has not found the goal yet.");
+            return;
         }
 
-        LinkedUnorderedList<Enemy> currentEnemies = getEnemiesInDivision(player, building.getEnemies());
-
+        LinkedUnorderedList<Enemy> currentEnemies = player.getCurrentDivision().getEnemies();
         if (!currentEnemies.isEmpty()) {
-            System.out.println("Enemies in the division");
+            System.out.println("Enemies in the division. Clearing the area first.");
             scenario1(player, building);
             return;
         }
 
-        System.out.println("No enemies in the division, To Cruz interact with goal");
         interactWithGoal(player, goal);
-
         if (player.isAlive()) {
-            System.out.println("Mission Completed");
+            System.out.println("Mission Completed!");
         } else {
-            System.out.println("Tó Cruz is dead");
+            System.out.println("To Cruz is dead. Mission failed.");
+        }
+    }
+
+    // Interação com o objetivo
+    private void interactWithGoal(ToCruz player, Goal goal) {
+        System.out.println(player.getName() + " interacted with goal: " + goal.getType());
+        goal.setRequired(true);
+        System.out.println("Goal: " + goal.getType() + " successfully retrieved!");
+    }
+
+    private void moveEnemy(ToCruz player, Building building) {
+        // Itera por todas as divisões do mapa
+        for (Division division : building.getMap().getVertexes()) {
+            LinkedUnorderedList<Enemy> enemies = division.getEnemies();
+
+            // Se não houver inimigos, pula para a próxima divisão
+            if (enemies.isEmpty()) {
+                continue;
+            }
+
+            // Lista temporária para armazenar inimigos a serem movidos
+            LinkedUnorderedList<Enemy> enemiesToMove = new LinkedUnorderedList<>();
+
+            // Adiciona inimigos à lista temporária para movimentação
+            for (Enemy enemy : enemies) {
+                if (enemy.isAlive() && !division.equals(player.getCurrentDivision())) {
+                    enemiesToMove.addToRear(enemy);
+                }
+            }
+
+            // Agora movemos os inimigos da lista temporária
+            for (Enemy enemy : enemiesToMove) {
+                Division newDivision = moveNPC(enemy, division, building);
+
+                // Verifica se o inimigo foi movido para uma nova divisão
+                if (!newDivision.equals(division)) {
+                    // Remover o inimigo da divisão original e adicionar na nova
+                    division.removeEnemy(enemy);
+                    newDivision.addEnemy(enemy);
+                    System.out.println(enemy.getName() + " moved from " + division.getName() + " to " + newDivision.getName());
+                } else {
+                    // Caso o inimigo não tenha se movido, ele permanece na mesma divisão
+                    System.out.println(enemy.getName() + " stayed at " + newDivision.getName());
+                }
+            }
+        }
+    }
+
+    public Division moveNPC(Enemy enemy, Division division, Building building) {
+        // Determina o número de movimentos aleatórios para o inimigo
+        int moves = (int) (Math.random() * 3);
+
+        // Se o inimigo se mover, escolhe uma divisão aleatória
+        if (moves > 0) {
+            Division currentDivision = division;
+            Division lastDivision = null;
+
+            // Movimento do inimigo para a(s) nova(s) divisão(ões)
+            for (int i = 0; i < moves; i++) {
+                lastDivision = getRandomDivision(currentDivision, building);
+            }
+
+            return lastDivision; // Retorna a última divisão escolhida
         }
 
+        // Caso contrário, o inimigo permanece na mesma divisão
+        return division;
     }
 
-    private void interactWithGoal(ToCruz player, Goal goal) {
-        System.out.println(player.getName() + " interact with goal" + goal.getType());
-        goal.setRequired(true);
-        System.out.println("Alvo: " + goal.getType() + " required with success");
+    public Division getRandomDivision(Division division, Building building) {
+        LinkedUnorderedList<Division> neighbors = building.getMap().getEdges(division);
+
+        // Se não houver divisões vizinhas, retorna a divisão atual
+        if (neighbors.isEmpty()) {
+            return division;
+        }
+
+        // Escolhe uma divisão aleatória entre as vizinhas
+        int randomIndex = (int) (Math.random() * neighbors.size());
+        Iterator<Division> iterator = neighbors.iterator();
+
+        // Percorre até a divisão aleatória
+        for (int i = 0; i < randomIndex; i++) {
+            iterator.next();
+        }
+
+        // Retorna a divisão aleatória escolhida
+        return iterator.next();
     }
 
+
+    // Escolher divisão com base na opção
+    private Division findDivisionByOption(LinkedUnorderedList<Division> neighbors, int option) {
+        int index = 1;
+        for (Division division : neighbors) {
+            if (index == option) {
+                return division;
+            }
+            index++;
+        }
+        return null;
+    }
 }

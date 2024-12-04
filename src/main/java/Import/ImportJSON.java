@@ -46,20 +46,25 @@ public class ImportJSON {
                 map.addEdge(origemDivision, destinoDivision);
             }
 
+            //Enemies
+            importEnemy(filepath,map);
+
+            //Itens
+            importItems(filepath, map);
+
             return map;
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public LinkedUnorderedList<Enemy> importEnemy(String filepath) {
+    public void importEnemy(String filepath, Map<Division> map) {
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader fileReader = new FileReader(filepath)){
             JSONObject jsonObject = (JSONObject) jsonParser.parse(fileReader);
 
             JSONArray enemiesArray = (JSONArray) jsonObject.get("inimigos");
-            LinkedUnorderedList<Enemy> enemies = new LinkedUnorderedList<>();
 
             for (int i = 0; i < enemiesArray.size(); i++) {
                 JSONObject toObject = (JSONObject) enemiesArray.get(i);
@@ -67,13 +72,12 @@ public class ImportJSON {
                 String name = (String) toObject.get("nome");
                 long power = (long) toObject.get("poder");
                 String divisionName = (String) toObject.get("divisao");
-                Division division = new Division(divisionName);
 
-                Enemy enemy = new Enemy( (int) power, name, division);
-                enemies.addToFront(enemy);
+                Division division = getOrCreateDivision(map, divisionName);
+
+                Enemy enemy = new Enemy( (int) power, name);
+                division.addEnemy(enemy);
             }
-
-            return enemies;
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
@@ -97,7 +101,7 @@ public class ImportJSON {
         }
     }
 
-    public LinkedUnorderedList<Item> importItems(String filepath) {
+    public void  importItems(String filepath, Map<Division> map) {
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader fileReader = new FileReader(filepath)){
@@ -122,13 +126,11 @@ public class ImportJSON {
 
                 }
                 String divisionName = (String) toObject.get("divisao");
-                Division division = new Division(divisionName);
+                Division division = getOrCreateDivision(map, divisionName);
 
                 Item item = new Item( division, it, (int) points);
-                items.addToFront(item);
+                division.addItem(item);
             }
-
-            return items;
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
@@ -162,5 +164,16 @@ public class ImportJSON {
             }
         }
         return null;
+    }
+
+    private Division getOrCreateDivision(Map<Division> map, String divisionName){
+        for (int i = 0; i < map.getNumVertices(); i++) {
+            if (map.getVertex(i).getName().equalsIgnoreCase(divisionName)) {
+                return map.getVertex(i);
+            }
+        }
+        Division newDivision = new Division(divisionName);
+        map.addVertex(newDivision);
+        return newDivision;
     }
 }

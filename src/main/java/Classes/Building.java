@@ -3,22 +3,22 @@ package Classes;
 import Collections.Lists.LinkedUnorderedList;
 import Import.ImportJSON;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class Building {
 
-    ImportJSON imprt;
-    Goal goal;
-    Map<Division> map;
-    LinkedUnorderedList<Item> items;
-    LinkedUnorderedList<Division> inAndOut;
+    private ImportJSON imprt;
+    private Goal goal;
+    private Map<Division> map;
+    private LinkedUnorderedList<Division> inAndOut;
 
     public Building(String file) {
 
         this.imprt = new ImportJSON();
         this.goal = imprt.importGoal(file);
         this.map = imprt.importBuilding(file);
-        this.items = imprt.importItems(file);
         this.inAndOut = imprt.importInAndOut(file);
     }
 
@@ -27,32 +27,7 @@ public class Building {
     }
 
     public Map<Division> getMap() {
-        Map<Division> tmp = new Map<>();
-
-        for (Division division : this.map.getVertexes()) {
-            tmp.addVertex(division);
-        }
-        boolean[][] matrix = this.map.getMatrix();
-        for (int i = 0; i < this.map.getNumVertices(); i++) {
-            for (int j = 0; j < this.map.getNumVertices(); j++) {
-                if (matrix[i][j]) {
-                    tmp.addEdge(this.map.getVertex(i), this.map.getVertex(j));
-                }
-            }
-        }
-
-        return tmp;
-    }
-
-
-
-    public LinkedUnorderedList<Item> getItems() {
-        LinkedUnorderedList<Item> tmp = new LinkedUnorderedList<>();
-
-        for (Item item : this.items) {
-            tmp.addToFront(item);
-        }
-        return tmp;
+        return this.map;
     }
 
     public LinkedUnorderedList<Division> getInAndOut() {
@@ -66,11 +41,31 @@ public class Building {
 
     @Override
     public String toString() {
-        return "Building{" +
-                ", goal=" + goal +
-                ", map=" + map +
-                ", items=" + items +
-                ", inAndOut=" + inAndOut +
-                '}';
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Building:\n");
+        sb.append("  Goal: ").append(goal).append("\n");
+
+        sb.append("  Map:\n");
+        for (int i = 0; i < map.getNumVertices(); i++) {
+            sb.append("    ").append(map.getVertex(i)).append("\n");
+        }
+
+        sb.append("\n  Adjacency Matrix:\n");
+        boolean[][] matrix = map.getMatrix();
+        for (int i = 0; i < map.getNumVertices(); i++) {
+            for (int j = 0; j < map.getNumVertices(); j++) {
+                sb.append(matrix[i][j] ? "1 " : "0 ");
+            }
+            sb.append("\n");
+        }
+
+        sb.append("  Entrances/Exits:\n");
+        for (Division division : inAndOut) {
+            sb.append("    ").append(division.getName()).append("\n");
+        }
+
+        return sb.toString();
     }
+
 }

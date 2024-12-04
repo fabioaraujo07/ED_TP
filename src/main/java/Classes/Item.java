@@ -10,8 +10,6 @@ public class Item {
         this.points = points;
     }
 
-
-
     public Items getItems() {
         return items;
     }
