@@ -17,6 +17,9 @@ public class ImportJSONTest {
         Building building = new Building(file);
         System.out.printf(building.toString());
 
+        System.out.println();
+        System.out.println("Test Getters");
+
         m = building.getMap();
         System.out.println(m);
 

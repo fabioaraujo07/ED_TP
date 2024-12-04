@@ -3,19 +3,17 @@ package Game;
 import Classes.*;
 import Collections.Lists.LinkedUnorderedList;
 import Collections.Lists.UnorderedArrayList;
+import Exceptions.InvalidAction;
 
 public class CombatHandler {
 
-    public void scenario1(ToCruz player, Building building){
+    public void scenario1(ToCruz player, Building building) {
 
         LinkedUnorderedList<Enemy> currentEnemies = getEnemiesInDivision(player, building.getEnemies());
 
         if (currentEnemies.isEmpty()){
-            System.out.println("No enemies found");
-            return;
+            throw new InvalidAction("No enemies to atack");
         }
-
-        System.out.println("Enemies found in" + player.getCurrentDivision());
 
         for (Enemy enemy: currentEnemies){
             player.attack(enemy);
@@ -25,26 +23,17 @@ public class CombatHandler {
         for (Enemy enemy : currentEnemies){
             if (!enemy.isAlive()){
                 currentEnemies.remove(enemy);
-            }else {
                 System.out.println(enemy.getName() + "was defeated!");
             }
         }
 
         if(!currentEnemies.isEmpty()){
-            System.out.println("Left enemie(s) attacking");
+            System.out.println(currentEnemies.size() + " enemie(s) attacking");
             for (Enemy enemy: currentEnemies){
                 enemy.attackPlayer(player);
                 System.out.println(enemy.getName() + "attacked causing" + enemy.getPower() + "damage to To Cruz");
             }
-
-            for (Enemy enemy: building.getEnemies()){
-                if (!enemy.getDivision().equals(player.getCurrentDivision()) && enemy.isAlive()){
-                    Division randomNeighbor = getRandomNeighbor(building, enemy.getDivision()) ;
-                    if (randomNeighbor != null){
-                        enemy.setDivision(randomNeighbor);
-                    }
-                }
-            }
+            moveEnemy(player, building);
         }
 
         if (!player.isAlive()){
@@ -53,7 +42,7 @@ public class CombatHandler {
 
     }
 
-    private LinkedUnorderedList<Enemy> getEnemiesInDivision(ToCruz player, LinkedUnorderedList<Enemy> allEnemies){
+    public LinkedUnorderedList<Enemy> getEnemiesInDivision(ToCruz player, LinkedUnorderedList<Enemy> allEnemies) {
         LinkedUnorderedList<Enemy> enemiesInDivision = new LinkedUnorderedList<>();
         for (Enemy enemy: allEnemies){
             if (enemy.getDivision().equals(player.getCurrentDivision()) && enemy.isAlive()){
@@ -63,9 +52,7 @@ public class CombatHandler {
         return enemiesInDivision;
     }
 
-
-    // Esse método tem de ser verifacado de modo que tem que ser até duas divisões a partir da sua posição
-    private Division getRandomNeighbor(Building building, Division currentDivision){
+    private Division getRandomNeighbor(Building building, Division currentDivision) {
         LinkedUnorderedList<Division> neighbors = building.getMap().getEdges(currentDivision);
         if (neighbors.isEmpty()){
             return null; // colocar exceção
@@ -82,29 +69,48 @@ public class CombatHandler {
         return null;
     }
 
-    public void scenario2(ToCruz player, Building building){
+    public void scenario2(ToCruz player, Building building, LinkedUnorderedList<Division> neighbors, int option) throws InvalidAction{
 
-        LinkedUnorderedList<Enemy> enemies = getEnemiesInDivision(player, building.getEnemies());
+        Division targetDivision = findDivisionByOption(neighbors, option);
+        if (targetDivision != null) {
+            player.movePlayer(building.getMap(), targetDivision);
+        } else {
+            throw new InvalidAction("Invalid option selected");
+        }
+        moveEnemy(player, building);
+    }
 
-        if (enemies.isEmpty()){
-            for (Enemy enemy: building.getEnemies()){
-                if (enemy.isAlive()){
-                    Division randomNeighbor = getRandomNeighbor(building, enemy.getDivision());
-                    if (randomNeighbor != null){
-                        System.out.println(enemy.getName() + " moved from " + enemy.getDivision().getName() + " to " + randomNeighbor.getName());
-                        enemy.setDivision(randomNeighbor);
-                    }
+    private static Division findDivisionByOption(LinkedUnorderedList<Division> neighbors, int option) {
+        int i = 1;
+        for (Division division : neighbors) {
+            if (i == option) {
+                return division;
+            }
+            else {
+                i++;
+            }
+        }
+        return null;
+    }
+
+    private void moveEnemy(ToCruz player, Building building) {
+        for (Enemy enemy: building.getEnemies()){
+            if (enemy.isAlive() && !enemy.getDivision().equals(player.getCurrentDivision())){
+                Division randomNeighbor = getRandomNeighbor(building, enemy.getDivision());
+                if (randomNeighbor != null){
+                    System.out.println(enemy.getName() + " moved from " + enemy.getDivision().getName() + " to " + randomNeighbor.getName());
+                    enemy.setDivision(randomNeighbor);
                 }
             }
-        }else {
-            scenario1(player, building);
         }
+
+        scenario3(player, building);
     }
 
     public void scenario3(ToCruz player, Building building){
 
         for (Enemy enemy : building.getEnemies()){
-            if (enemy.isAlive()){
+            if (enemy.isAlive() && !enemy.getDivision().equals(player.getCurrentDivision())){
                 Division randomNeighbor = getRandomNeighbor(building, enemy.getDivision());
                 if (randomNeighbor != null){
                     enemy.setDivision(randomNeighbor);
@@ -138,28 +144,24 @@ public class CombatHandler {
                     System.out.println(enemy.getName() + "is dead");
                 }
             }
-        }else{
-            System.out.println("No enemies entered");
         }
-
     }
 
-    public void scenario4(ToCruz player, Building building){
+    public void scenario4(ToCruz player, Building building) {
 
-        if (!player.getBag().isEmpty()){
+        if (!player.getBag().isEmpty()) {
 
             Item item = (Item) player.getBag().pop();
             player.useItem(player, item);
             System.out.println(player.getName() + "used a life kit and restored health");
-            return;
-        }else {
-            System.out.println("No life kits in the bag");
+            moveEnemy(player, building);
         }
-
-        scenario3(player, building);
+        else {
+            throw new InvalidAction("No life kits in the bag");
+        }
     }
 
-    public void scenario5(ToCruz player, Building building, Goal goal){
+    public void scenario5(ToCruz player, Building building, Goal goal) {
 
         if (!player.getCurrentDivision().equals(goal.getDivision())){
             System.out.println("Tó Cruz did not found the goal yet");
@@ -186,8 +188,8 @@ public class CombatHandler {
 
     }
 
-    public void scenario6(ToCruz player, Building building, Goal goal){
-        if (!player.getCurrentDivision().equals(goal.getDivision())){
+    public void scenario6(ToCruz player, Building building, Goal goal) {
+        if (!player.getCurrentDivision().equals(goal.getDivision())) {
             System.out.println("Tó Cruz did not found the goal yet");
         }
 
@@ -210,7 +212,7 @@ public class CombatHandler {
 
     }
 
-    private void interactWithGoal(ToCruz player, Goal goal){
+    private void interactWithGoal(ToCruz player, Goal goal) {
         System.out.println(player.getName() + " interact with goal" + goal.getType());
         goal.setRequired(true);
         System.out.println("Alvo: " + goal.getType() + " required with success");
