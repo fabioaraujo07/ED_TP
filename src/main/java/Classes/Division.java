@@ -1,16 +1,16 @@
 package Classes;
 
+import Collections.Lists.LinkedUnorderedList;
+
 public class Division {
 
     private String name;
     //private boolean in_and_out;
+    LinkedUnorderedList<Enemy> enemies;
 
-    private int id;
-
-    private static int nextId = 0;
 
     public Division(String name) {
-        this.id = nextId++;
+        this.enemies = new LinkedUnorderedList<>();
         this.name = name;
     }
 
@@ -22,13 +22,6 @@ public class Division {
         this.name = name;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     @Override
     public boolean equals(Object o) {

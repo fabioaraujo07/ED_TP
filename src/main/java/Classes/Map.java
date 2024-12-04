@@ -33,7 +33,6 @@ public boolean[][] getMatrix(){
     return matrix;
 }
 
-    //Método pa djobi se um divison tem ligason ku kelotu
     public LinkedUnorderedList<T> getEdges(T v) throws ElementNotFound {
         int vertex = getIndex(v);
         if (!indexIsValid(vertex)){
@@ -60,13 +59,11 @@ public T getVertex(int i){
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        // Exibe os Vértices (Divisões)
         sb.append("Vértices do Grafo:\n");
         for (int i = 0; i < numVertices; i++) {
             sb.append(i).append(": ").append(vertices[i].toString()).append("\n");
         }
 
-        // Exibe a Matriz de Adjacência
         sb.append("\nMatriz de Adjacência:\n");
         for (int i = 0; i < numVertices; i++) {
             for (int j = 0; j < numVertices; j++) {

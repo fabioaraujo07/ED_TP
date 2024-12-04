@@ -10,7 +10,6 @@ public class Building {
     ImportJSON imprt;
     Goal goal;
     Map<Division> map;
-    LinkedUnorderedList<Enemy> enemies;
     LinkedUnorderedList<Item> items;
     LinkedUnorderedList<Division> inAndOut;
 
@@ -19,7 +18,6 @@ public class Building {
         this.imprt = new ImportJSON();
         this.goal = imprt.importGoal(file);
         this.map = imprt.importBuilding(file);
-        this.enemies = imprt.importEnemy(file);
         this.items = imprt.importItems(file);
         this.inAndOut = imprt.importInAndOut(file);
     }
@@ -46,14 +44,7 @@ public class Building {
         return tmp;
     }
 
-    public LinkedUnorderedList<Enemy> getEnemies() {
-        LinkedUnorderedList<Enemy> tmp= new LinkedUnorderedList<>();
 
-        for (Enemy enemy : this.enemies) {
-            tmp.addToFront(enemy);
-        }
-        return tmp;
-    }
 
     public LinkedUnorderedList<Item> getItems() {
         LinkedUnorderedList<Item> tmp = new LinkedUnorderedList<>();
@@ -78,7 +69,6 @@ public class Building {
         return "Building{" +
                 ", goal=" + goal +
                 ", map=" + map +
-                ", enemies=" + enemies +
                 ", items=" + items +
                 ", inAndOut=" + inAndOut +
                 '}';
