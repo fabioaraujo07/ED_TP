@@ -213,40 +213,45 @@ public abstract class LinkedList<T> implements ListADT<T> {
             // Atualiza para que não seja possível remover o mesmo elemento novamente
             okToRemove = false;
 
-            try {
-                // Reinicia do início para encontrar o nó anterior ao lastReturned
-                LinearNode<T> previous = null;
-                LinearNode<T> current = front;
+//            try {
+//                // Reinicia do início para encontrar o nó anterior ao lastReturned
+//                LinearNode<T> previous = null;
+//                LinearNode<T> current = front;
+//
+//                // Percorre até encontrar o lastReturned
+//                while (current != null && current != lastReturned) {
+//                    previous = current;
+//                    current = current.getNext();
+//                }
+//
+//                if (current == null) {
+//                    throw new IllegalStateException("Iterator corrupted.");
+//                }
+//
+//                // Remove o lastReturned da lista
+//                if (previous == null) { // Caso especial: lastReturned é o primeiro elemento
+//                    front = front.getNext();
+//                } else {
+//                    previous.setNext(current.getNext());
+//                }
+//
+//                // Atualiza rear caso o último elemento tenha sido removido
+//                if (current == rear) {
+//                    rear = previous;
+//                }
+//
+//                count--;
+//                modCount++;
+//                expectedModCount = modCount;
+//
+//            } catch (EmptyCollectionException e) {
+//                // Tratar exceção caso necessário (neste caso, geralmente é ignorado)
+//            }
 
-                // Percorre até encontrar o lastReturned
-                while (current != null && current != lastReturned) {
-                    previous = current;
-                    current = current.getNext();
-                }
-
-                if (current == null) {
-                    throw new IllegalStateException("Iterator corrupted.");
-                }
-
-                // Remove o lastReturned da lista
-                if (previous == null) { // Caso especial: lastReturned é o primeiro elemento
-                    front = front.getNext();
-                } else {
-                    previous.setNext(current.getNext());
-                }
-
-                // Atualiza rear caso o último elemento tenha sido removido
-                if (current == rear) {
-                    rear = previous;
-                }
-
-                count--;
-                modCount++;
-                expectedModCount = modCount;
-
-            } catch (EmptyCollectionException e) {
-                // Tratar exceção caso necessário (neste caso, geralmente é ignorado)
-            }
+            T element = next();
+            LinkedList.this.remove(element);
+            okToRemove = false;
+            expectedModCount++;
         }
 
     }

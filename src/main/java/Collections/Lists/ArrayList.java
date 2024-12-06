@@ -150,7 +150,7 @@ public abstract class ArrayList<T> implements ListADT<T> {
 
             T element = next();
             ArrayList.this.remove(element);
-            isOkToRemove = true;
+            isOkToRemove = false;
             expectedModCount++;
             current--;
         }

@@ -2,6 +2,7 @@ package Game;
 
 import Classes.*;
 import Collections.Lists.LinkedUnorderedList;
+import Collections.Lists.UnorderedArrayList;
 import Exceptions.InvalidAction;
 
 import java.util.Iterator;
@@ -24,13 +25,18 @@ public class CombatHandler {
         }
 
         // Remove defeated enemies
-        Iterator<Enemy> iterator = currentEnemies.iterator();
-        while (iterator.hasNext()) {
-            Enemy enemy = iterator.next();
+        LinkedUnorderedList<Enemy> defeatedEnemies = new LinkedUnorderedList<>();
+
+        for (Enemy enemy : currentEnemies) {
             if (!enemy.isAlive()) {
-                iterator.remove();
-                System.out.println(enemy.getName() + " was defeated!");
+                defeatedEnemies.addToRear(enemy);
+                System.out.println(enemy.getName() + "was defeated!");
             }
+        }
+
+        // Remove os inimigos derrotados fora do loop de iteração principal
+        for (Enemy defeatedEnemy : defeatedEnemies) {
+            currentEnemies.remove(defeatedEnemy);
         }
 
         // Enemies counter-attack
