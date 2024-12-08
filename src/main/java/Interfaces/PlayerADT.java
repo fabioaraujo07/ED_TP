@@ -12,7 +12,7 @@ public interface PlayerADT<T>{
 
     public void movePlayer(Map map, Division division);
 
-    public void useItem(ToCruz player, Item item);
+    public void useItem(Item item);
 
     public void attack (Enemy enemy);
 

@@ -2,7 +2,7 @@ package Game;
 
 import Classes.*;
 import Collections.Lists.LinkedUnorderedList;
-import Collections.Lists.UnorderedArrayList;
+import Enumerations.Items;
 import Exceptions.InvalidAction;
 
 import java.util.Iterator;
@@ -62,25 +62,28 @@ public class CombatHandler {
             throw new InvalidAction("Invalid option selected. No movement occurred.");
         }
 
+
         player.movePlayer(building.getMap(), targetDivision);
+
+        LinkedUnorderedList<Item> divisionItems = player.getCurrentDivision().getItems();
+        if (!divisionItems.isEmpty()) {
+            for (Item item : divisionItems){
+                player.addItem(item);
+                if (item.getItems().equals(Items.COLETE)) {
+                    player.useItem(item);
+                }
+                System.out.println(player.getCurrentDivision().getName() + "picked " + item.getItems() + " and added it to the bag.");
+            }
+        }
+
         moveEnemy(player, building);
     }
 
     // Cenário 3: Movimentação dos inimigos
     public void scenario3(ToCruz player, Building building) {
-        for (Division division : building.getMap().getVertexes()) {
-            LinkedUnorderedList<Enemy> enemies = division.getEnemies();
-            for (Enemy enemy : enemies) {
-                if (enemy.isAlive() && !division.equals(player.getCurrentDivision())) {
-                    Division randomNeighbor = getRandomDivision(division, building);
-                    if (randomNeighbor != null) {
-                        division.removeEnemy(enemy);
-                        randomNeighbor.addEnemy(enemy);
-                        System.out.println(enemy.getName() + " moved from " + division.getName() + " to " + randomNeighbor.getName());
-                    }
-                }
-            }
-        }
+        moveEnemy(player, building);
+
+
     }
 
     // Cenário 4: Uso de item pelo jogador
@@ -89,17 +92,27 @@ public class CombatHandler {
             throw new InvalidAction("No items available in the bag.");
         }
 
-        Item item = (Item) player.getBag().pop();
-        player.useItem(player, item);
+        Item item = (Item) player.getBag().peek();
+        player.useItem(item);
         System.out.println(player.getName() + " used " + item.getItems() + " and restored health.");
+
+        LinkedUnorderedList<Enemy> currentEnemies = player.getCurrentDivision().getEnemies();
+        //Enimigo ataca se item for usado em batalha
+        if (!currentEnemies.isEmpty()) {
+            System.out.println(currentEnemies.size() + " enemy(s) are counter-attacking!");
+            for (Enemy enemy : currentEnemies) {
+                enemy.attackPlayer(player);
+                System.out.println(enemy.getName() + " attacked causing " + enemy.getPower() + " damage to To Cruz.");
+            }
+        }
         moveEnemy(player, building);
+        LinkedUnorderedList<Enemy> newEnemies = player.getCurrentDivision().getEnemies();
     }
 
-    // Cenário 5: Jogador encontra o objetivo, mas há inimigos
+    // Cenário 5: Jogador encontra o objetivo, mas há inimigos Não necessario
     public void scenario5(ToCruz player, Building building, Goal goal) {
         if (!player.getCurrentDivision().equals(goal.getDivision())) {
-            System.out.println("To Cruz has not found the goal yet.");
-            return;
+            throw new InvalidAction("To Cruz has not found the goal yet.");
         }
 
         LinkedUnorderedList<Enemy> enemies = player.getCurrentDivision().getEnemies();
@@ -116,8 +129,7 @@ public class CombatHandler {
     // Cenário 6: Jogador encontra o objetivo sem inimigos
     public void scenario6(ToCruz player, Building building, Goal goal) {
         if (!player.getCurrentDivision().equals(goal.getDivision())) {
-            System.out.println("To Cruz has not found the goal yet.");
-            return;
+            throw new InvalidAction("To Cruz has not found the goal yet.");
         }
 
         LinkedUnorderedList<Enemy> currentEnemies = player.getCurrentDivision().getEnemies();
@@ -128,11 +140,20 @@ public class CombatHandler {
         }
 
         interactWithGoal(player, goal);
-        if (player.isAlive()) {
-            System.out.println("Mission Completed!");
-        } else {
-            System.out.println("To Cruz is dead. Mission failed.");
+        System.out.println("Get out of the building!");
+    }
+
+    public Division startDivision(ToCruz player, Building building, LinkedUnorderedList<Division> neighbors, int option) throws InvalidAction {
+        Division targetDivision = findDivisionByOption(neighbors, option);
+
+        if (targetDivision == null) {
+            throw new InvalidAction("Invalid option selected. No movement occurred.");
         }
+
+        player.moveDivision(targetDivision);
+        moveEnemy(player, building);
+
+        return targetDivision;
     }
 
     // Interação com o objetivo

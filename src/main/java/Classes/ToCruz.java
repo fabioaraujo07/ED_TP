@@ -1,6 +1,7 @@
 package Classes;
 
 import Collections.Stack.LinkedStack;
+import Enumerations.Items;
 import Exceptions.ItemNotFound;
 import Interfaces.PlayerADT;
 
@@ -19,6 +20,15 @@ public class ToCruz<T> implements PlayerADT<T> {
         this.name = name;
         this.lifePoints = INITIAL_LIFE_POINTS;
         this.currentDivision = currentDivision;
+        this.bag = new LinkedStack<>();
+        this.isAlive = true;
+    }
+
+    public ToCruz(String name) {
+        this.power = POWER;
+        this.name = name;
+        this.lifePoints = INITIAL_LIFE_POINTS;
+        this.currentDivision = null;
         this.bag = new LinkedStack<>();
         this.isAlive = true;
     }
@@ -52,18 +62,28 @@ public class ToCruz<T> implements PlayerADT<T> {
     }
 
     private int LifePointsChanged(int points) {
+
         this.lifePoints += points;
         System.out.println("The life points changed to " + lifePoints);
         return lifePoints;
     }
 
     @Override
-    public void useItem(ToCruz player, Item item) throws ItemNotFound {
-        if (player.getBag().peek().equals(item)) {
-            player.LifePointsChanged(item.getPoints());
+    public void useItem(Item item) throws ItemNotFound {
+        if (getBag().peek().equals(item)) {
 
-            player.removeItem(item);
+            if (item.getItems().equals(Items.KIT_VIDA)) {
+                if (lifePoints < 100 && LifePointsChanged(item.getPoints()) > 100) {
+                    lifePoints = 100;
+                }
+                else if (lifePoints >= 100) {
+                    lifePoints -= item.getPoints();
+                }
+            }
+            LifePointsChanged(item.getPoints());
+            removeItem(item);
             System.out.println("Player has used the item " + item);
+
         }else {
             throw new ItemNotFound("Item not found");
         }

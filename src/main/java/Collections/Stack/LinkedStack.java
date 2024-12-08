@@ -18,11 +18,10 @@ public class LinkedStack<T> implements StackADT<T> {
     @Override
     public void push(T item) {
         LinearNode<T> newNode = new LinearNode<>(item);
-
-            newNode.setNext(top);
-            top = newNode;
-            count++;
-        }
+        newNode.setNext(top);
+        top = newNode;
+        count++;
+    }
 
     @Override
     public T pop() {
@@ -42,10 +41,7 @@ public class LinkedStack<T> implements StackADT<T> {
 
     @Override
     public boolean isEmpty() {
-        if (count == 0) {
-            return true;
-        }
-        return false;
+        return count == 0;
     }
 
     @Override

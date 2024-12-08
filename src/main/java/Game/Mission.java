@@ -16,8 +16,8 @@ public class Mission {
 
         Building building = new Building(filepath);
         Goal goal = building.getGoal();
-        Division startDivision = building.getInAndOut().first();
-        ToCruz player = new ToCruz("Tó Cruz", startDivision);
+        Division startDivision = null;
+        ToCruz player = new ToCruz("Tó Cruz");
 
         System.out.println("\nRegistered divisions in the graph:");
         for (Division division : building.getMap().getVertexes()) {
@@ -27,12 +27,21 @@ public class Mission {
         CombatHandler combatHandler = new CombatHandler();
 
         System.out.println("\nGame has started!");
+
+        int entranceOption = 1;
+        System.out.println("Choose entrance division:");
+        for (Division entrance : building.getInAndOut()) {
+            System.out.println(entranceOption++ + ". " + entrance.getName());
+        }
+        int entranceChoice = scanner.nextInt();
+        startDivision = combatHandler.startDivision(player, building, building.getInAndOut(), entranceChoice);
         System.out.println("You are currently in the division: " + startDivision.getName());
         System.out.println("Objective: " + goal.getType() + " in the division " + goal.getDivision().getName());
 
         boolean gameRunning = true;
 
         while (gameRunning) {
+
             // Atualiza a interface do jogador
             System.out.println("\n--------------------------------------");
             System.out.println("Current Division: " + player.getCurrentDivision().getName());
@@ -50,10 +59,14 @@ public class Mission {
             } else {
                 System.out.println("Choose an action:");
                 System.out.println("1. Move to another division");
-                System.out.println("2. Attack enemies (Scenario 1)");
-                System.out.println("3. Use an item (Scenario 4)");
-                System.out.println("4. Search for the objective (Scenario 5 or 6)");
-                System.out.println("5. Exit the game");
+                System.out.println("2. Use an item (Scenario 4)");
+                System.out.println("3. Search for the objective (Scenario 5 or 6)");
+                for (Division exit : building.getInAndOut()) {
+                    if (player.getCurrentDivision().equals(exit)) {
+                        System.out.println("4. Exit Building");
+                    }
+                }
+                System.out.println("0. Exit the game");
                 System.out.println("\nConnected divisions:");
                 LinkedUnorderedList<Division> neighbors = building.getMap().getEdges(player.getCurrentDivision());
                 int option = 1;
@@ -83,19 +96,11 @@ public class Mission {
                         }
                         break;
 
-                    case 2: // Ataque de inimigos (se presentes)
-                        if (!currentEnemies.isEmpty()) {
-                            combatHandler.scenario1(player, building);
-                        } else {
-                            throw new InvalidAction("No enemies to attack.");
-                        }
-                        break;
-
-                    case 3: // Uso de item
+                    case 2: // Uso de item
                         combatHandler.scenario4(player, building);
                         break;
 
-                    case 4: // Procura pelo objetivo
+                    case 3: // Procura pelo objetivo
                         if (player.getCurrentDivision().equals(goal.getDivision())) {
                             combatHandler.scenario6(player, building, goal);
                         } else {
@@ -103,7 +108,18 @@ public class Mission {
                         }
                         break;
 
-                    case 5: // Saída do jogo
+                    case 4: // Sair do edificio
+                        System.out.println("Exiting Building");
+                        if (goal.isRequired()) {
+                            System.out.println("Congratulation!! \nMission completed with successs :)");
+                        }
+                        else {
+                            System.out.println("Oh no!! \nYou didn't reach the goal. Mission failed :(");
+                        }
+                        gameRunning = false;
+                        break;
+
+                    case 0: // Saída do jogo
                         System.out.println("Exiting the game. See you next time!");
                         gameRunning = false;
                         break;

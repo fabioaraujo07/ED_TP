@@ -45,7 +45,7 @@ public class TestToCruz {
         // Tentar usar um item
         System.out.println("\nTentando usar o item no topo da bolsa...");
         try {
-            player.useItem(player, item2); // Tenta usar o "Mana Potion"
+            player.useItem(item2); // Tenta usar o "Mana Potion"
         } catch (ItemNotFound e) {
             System.out.println(e.getMessage());
         }
