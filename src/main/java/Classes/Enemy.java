@@ -52,7 +52,7 @@ public class Enemy{
     }
 
     public void setAlive(boolean alive) {
-        alive = alive;
+        this.alive = alive;
     }
 
     @Override

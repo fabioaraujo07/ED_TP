@@ -12,6 +12,7 @@ public class Mission {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Welcome to the Improbable Mission game!");
+
         String filepath = "src/main/resources/Missão.json";
 
         Building building = new Building(filepath);
@@ -133,10 +134,6 @@ public class Mission {
 
             // Verifica condições de vitória ou derrota
             if (!player.isAlive()) {
-                System.out.println("Tó Cruz has died. Game over.");
-                gameRunning = false;
-            } else if (goal.isRequired() && player.getCurrentDivision().equals(building.getInAndOut().last())) {
-                System.out.println("Congratulations! You have successfully completed the mission!");
                 gameRunning = false;
             }
         }
