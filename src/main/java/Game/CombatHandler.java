@@ -59,8 +59,15 @@ public class CombatHandler {
             throw new InvalidAction("Invalid option selected. No movement occurred.");
         }
 
-
         player.movePlayer(building.getMap(), targetDivision);
+
+        LinkedUnorderedList<Enemy> currentEnemies = player.getCurrentDivision().getEnemies();
+
+        if (!currentEnemies.isEmpty()) {
+            for (Enemy enemy : currentEnemies) {
+                enemy.attackPlayer(player);
+            }
+        }
 
         LinkedUnorderedList<Item> divisionItems = player.getCurrentDivision().getItems();
         if (!divisionItems.isEmpty()) {
@@ -72,7 +79,6 @@ public class CombatHandler {
                 System.out.println(player.getCurrentDivision().getName() + "picked " + item.getItems() + " and added it to the bag.");
             }
         }
-
         moveEnemy(player, building);
     }
 
@@ -140,6 +146,14 @@ public class CombatHandler {
         player.setDivision(targetDivision);
         moveEnemy(player, building);
 
+        LinkedUnorderedList<Enemy> currentEnemies = player.getCurrentDivision().getEnemies();
+
+        if (!currentEnemies.isEmpty()) {
+            for (Enemy enemy : currentEnemies) {
+                enemy.attackPlayer(player);
+            }
+        }
+
         return targetDivision;
     }
 
@@ -188,14 +202,14 @@ public class CombatHandler {
                     newDivision.addEnemy(enemy);
                     System.out.println(enemy.getName() + " moved from " + division.getName() + " to " + newDivision.getName());
 
-                    if (newDivision.equals(player.getCurrentDivision())) {
-                        System.out.println(enemy.getName() + "encountered To Cruz and is attacking!");
-                        enemy.attackPlayer(player);
-                        System.out.println(enemy.getName() + "attacked causing" + enemy.getPower() + " damage to To Cruz.");
-                    }
                 } else {
                     // Caso o inimigo não tenha se movido, ele permanece na mesma divisão
                     System.out.println(enemy.getName() + " stayed at " + newDivision.getName());
+                }
+                if (newDivision.equals(player.getCurrentDivision())) {
+                    System.out.println(enemy.getName() + "encountered To Cruz and is attacking!");
+                    enemy.attackPlayer(player);
+                    System.out.println(enemy.getName() + "attacked causing" + enemy.getPower() + " damage to To Cruz.");
                 }
                 enemiesMoved.addToFront(enemy);
             }

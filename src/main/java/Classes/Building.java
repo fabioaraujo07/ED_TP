@@ -19,7 +19,7 @@ public class Building {
         this.imprt = new ImportJSON(file);
         this.goal = imprt.importGoal();
         this.map = imprt.importBuilding();
-        this.inAndOut = imprt.importInAndOut();
+        this.inAndOut = imprt.importInAndOut(this.map);
     }
 
     public Goal getGoal() {

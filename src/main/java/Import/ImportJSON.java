@@ -54,6 +54,9 @@ public class ImportJSON {
             //Itens
             importItems(map);
 
+            //In and Out
+            importInAndOut(map);
+
             return map;
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
@@ -110,13 +113,12 @@ public class ImportJSON {
             JSONObject jsonObject = (JSONObject) jsonParser.parse(fileReader);
 
             JSONArray itemsArray = (JSONArray) jsonObject.get("itens");
-            LinkedUnorderedList<Item> items = new LinkedUnorderedList<>();
 
             for (int i = 0; i < itemsArray.size(); i++) {
                 JSONObject toObject = (JSONObject) itemsArray.get(i);
 
-                Items it = null;
-                long points = 0;
+                Items it;
+                long points;
                 switch ((String) toObject.get("tipo")) {
                     case "kit de vida":
                         it = Items.KIT_VIDA;
@@ -138,7 +140,7 @@ public class ImportJSON {
         }
     }
 
-    public LinkedUnorderedList<Division> importInAndOut() {
+    public LinkedUnorderedList<Division> importInAndOut(Map<Division> map) {
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader fileReader = new FileReader(filepath)) {
@@ -149,8 +151,10 @@ public class ImportJSON {
 
             for (int i = 0; i < entrada_saida.size(); i++) {
                 String divisionName = (String) entrada_saida.get(i);
-                Division division = new Division(divisionName);
-                inAndOut.addToFront(division);
+                Division division = getOrCreateDivision(map, divisionName);
+                if (division.getName().equals(divisionName)) {
+                    inAndOut.addToFront(division);
+                }
             }
 
             return inAndOut;
