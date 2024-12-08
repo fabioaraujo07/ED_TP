@@ -13,11 +13,13 @@ import java.io.IOException;
 
 public class ImportJSON {
 
-    public ImportJSON() {
+    private String filepath;
 
+    public ImportJSON(String filepath) {
+        this.filepath = filepath;
     }
 
-    public Map<Division> importBuilding(String filepath) {
+    public Map<Division> importBuilding() {
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader fileReader = new FileReader(filepath)) {
@@ -47,10 +49,10 @@ public class ImportJSON {
             }
 
             //Enemies
-            importEnemy(filepath,map);
+            importEnemy(map);
 
             //Itens
-            importItems(filepath, map);
+            importItems(map);
 
             return map;
         } catch (IOException | ParseException e) {
@@ -58,7 +60,7 @@ public class ImportJSON {
         }
     }
 
-    public void importEnemy(String filepath, Map<Division> map) {
+    public void importEnemy(Map<Division> map) {
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader fileReader = new FileReader(filepath)){
@@ -83,7 +85,7 @@ public class ImportJSON {
         }
     }
 
-    public Goal importGoal(String filepath) {
+    public Goal importGoal() {
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader fileReader = new FileReader(filepath)){
@@ -101,7 +103,7 @@ public class ImportJSON {
         }
     }
 
-    public void  importItems(String filepath, Map<Division> map) {
+    public void  importItems(Map<Division> map) {
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader fileReader = new FileReader(filepath)){
@@ -128,7 +130,7 @@ public class ImportJSON {
                 String divisionName = (String) toObject.get("divisao");
                 Division division = getOrCreateDivision(map, divisionName);
 
-                Item item = new Item( division, it, (int) points);
+                Item item = new Item(it, (int) points);
                 division.addItem(item);
             }
         } catch (IOException | ParseException e) {
@@ -136,7 +138,7 @@ public class ImportJSON {
         }
     }
 
-    public LinkedUnorderedList<Division> importInAndOut(String filepath) {
+    public LinkedUnorderedList<Division> importInAndOut() {
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader fileReader = new FileReader(filepath)) {

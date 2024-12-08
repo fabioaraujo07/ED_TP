@@ -7,33 +7,31 @@ import Exceptions.ElementNotFound;
 
 public class Map<T> extends Graph<T> {
 
-public Map(){
-    super();
-}
-
-public UnorderedArrayList<T> getVertexes(){
-    UnorderedArrayList<T> list = new UnorderedArrayList<>(numVertices);
-    for (int i = 0; i < numVertices; i++) {
-        list.addToRear(vertices[i]);
+    public Map(){
+        super();
     }
-    return list;
-}
 
-public int getNumVertices(){
-    return numVertices;
-}
-
-public boolean[][] getMatrix(){
-    boolean[][] matrix = new boolean[numVertices][numVertices];
-    for (int i = 0; i < numVertices; i++) {
-        for (int j = 0; j < numVertices; j++) {
-            matrix[i][j] = adjMatrix[i][j];
+    public UnorderedArrayList<T> getVertexes() {
+        UnorderedArrayList<T> list = new UnorderedArrayList<>(numVertices);
+        for (int i = 0; i < numVertices; i++) {
+            list.addToRear(vertices[i]);
         }
+        return list;
     }
-    return matrix;
-}
+
+    public boolean[][] getMatrix() {
+
+        boolean[][] matrix = new boolean[numVertices][numVertices];
+        for (int i = 0; i < numVertices; i++) {
+            for (int j = 0; j < numVertices; j++) {
+                matrix[i][j] = adjMatrix[i][j];
+            }
+        }
+        return matrix;
+    }
 
     public LinkedUnorderedList<T> getEdges(T v) throws ElementNotFound {
+
         int vertex = getIndex(v);
         if (!indexIsValid(vertex)){
             throw new ElementNotFound("Vertex not valid");
@@ -48,12 +46,16 @@ public boolean[][] getMatrix(){
         return edges;
     }
 
-public T getVertex(int i){
-    if (!indexIsValid(i)){
-        return null;
+    public T getVertex(int i) {
+        if (!indexIsValid(i)){
+            return null;
+        }
+        return vertices[i];
     }
-    return vertices[i];
-}
+
+    public int getNumVertices(){
+        return numVertices;
+    }
 
     @Override
     public String toString() {
@@ -74,7 +76,4 @@ public T getVertex(int i){
 
         return sb.toString();
     }
-
-
-
 }

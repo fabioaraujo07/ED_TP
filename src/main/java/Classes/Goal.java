@@ -9,6 +9,7 @@ public class Goal {
     public Goal(Division division, String type) {
         this.division = division;
         this.type = type;
+        this.required = false;
     }
 
     public Division getDivision() {
@@ -21,10 +22,6 @@ public class Goal {
 
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public boolean isRequired() {

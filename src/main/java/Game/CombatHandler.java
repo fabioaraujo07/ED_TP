@@ -9,6 +9,9 @@ import java.util.Iterator;
 
 public class CombatHandler {
 
+    public CombatHandler() {
+    }
+
     // Cenário 1: Ataque de inimigos
     public void scenario1(ToCruz player, Building building) {
         Division currentDivision = player.getCurrentDivision();
@@ -150,7 +153,7 @@ public class CombatHandler {
             throw new InvalidAction("Invalid option selected. No movement occurred.");
         }
 
-        player.moveDivision(targetDivision);
+        player.setDivision(targetDivision);
         moveEnemy(player, building);
 
         return targetDivision;

@@ -2,10 +2,11 @@ package Classes;
 import Enumerations.Items;
 
 public class Item {
+
     private Items items;
     private int points;
 
-    public Item (Division division, Items items, int points) {
+    public Item (Items items, int points) {
         this.items = items;
         this.points = points;
     }

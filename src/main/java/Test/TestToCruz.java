@@ -30,8 +30,8 @@ public class TestToCruz {
         System.out.println(player);
 
         // Criar itens
-        Item item1 = new Item(initialDivision, Items.COLETE,20); // Dá 20 pontos de vida
-        Item item2 = new Item(initialDivision, Items.KIT_VIDA,20);   // Dá 15 pontos de vida
+        Item item1 = new Item(Items.COLETE,20); // Dá 20 pontos de vida
+        Item item2 = new Item(Items.KIT_VIDA,20);   // Dá 15 pontos de vida
 
         // Adicionar itens à bolsa do jogador
         System.out.println("\nAdicionando itens à bolsa...");
@@ -56,7 +56,7 @@ public class TestToCruz {
 
         // Movendo o jogador para uma nova divisão
         System.out.println("\nMovendo o jogador para outra divisão...");
-        player.moveDivision(otherDivision);
+        player.setDivision(otherDivision);
 
         // Exibir informações após mover o jogador
         System.out.println("\nInformações do jogador após mover de divisão:");
@@ -64,7 +64,7 @@ public class TestToCruz {
 
         // Movendo o jogador para uma nova divisão
         System.out.println("\nMovendo o jogador para outra divisão...");
-        player.moveDivision(otherDivision2);
+        player.setDivision(otherDivision2);
 
         // Exibir informações após mover o jogador
         System.out.println("\nInformações do jogador após mover de divisão:");

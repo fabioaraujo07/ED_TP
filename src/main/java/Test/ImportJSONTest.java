@@ -7,11 +7,11 @@ import Import.ImportJSON;
 public class ImportJSONTest {
     public static void main(String[] args) {
 
-        ImportJSON imprt = new ImportJSON();
         Map<Division> m;
 //        LinkedUnorderedList<Item> i = new LinkedUnorderedList<>();
         LinkedUnorderedList<Division> io = new LinkedUnorderedList<>();
         String file = "src/main/resources/Missão.json";
+        ImportJSON imprt = new ImportJSON(file);
 
         Building building = new Building(file);
         System.out.printf(building.toString());

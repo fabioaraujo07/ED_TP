@@ -16,10 +16,10 @@ public class Building {
 
     public Building(String file) {
 
-        this.imprt = new ImportJSON();
-        this.goal = imprt.importGoal(file);
-        this.map = imprt.importBuilding(file);
-        this.inAndOut = imprt.importInAndOut(file);
+        this.imprt = new ImportJSON(file);
+        this.goal = imprt.importGoal();
+        this.map = imprt.importBuilding();
+        this.inAndOut = imprt.importInAndOut();
     }
 
     public Goal getGoal() {

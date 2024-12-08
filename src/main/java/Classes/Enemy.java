@@ -11,29 +11,21 @@ public class Enemy{
     private int lifePoints;
     private int power;
     private String name;
-    private boolean isAlive;
+    private boolean alive;
 
     public Enemy(int power, String name) {
         this.power = power;
         this.lifePoints = power;
         this.name = name;
-        this.isAlive = true;
+        this.alive = true;
     }
 
     public int getPower() {
         return power;
     }
 
-    public void setPower(int power) {
-        this.power = power;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getLifePoints() {
@@ -45,7 +37,7 @@ public class Enemy{
     }
 
     public void attackPlayer(ToCruz player) {
-        if (isAlive) {
+        if (alive) {
             int playerPoints = player.getLifePoints();
             playerPoints -= this.power;
             player.setLifePoints(playerPoints);
@@ -56,11 +48,11 @@ public class Enemy{
     }
 
     public boolean isAlive() {
-        return isAlive;
+        return alive;
     }
 
     public void setAlive(boolean alive) {
-        isAlive = alive;
+        alive = alive;
     }
 
     @Override

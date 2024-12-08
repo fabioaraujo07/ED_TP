@@ -2,10 +2,12 @@ package Classes;
 
 import Collections.Stack.LinkedStack;
 import Enumerations.Items;
+import Exceptions.InvalidAction;
 import Exceptions.ItemNotFound;
 import Interfaces.PlayerADT;
 
 public class ToCruz<T> implements PlayerADT<T> {
+
     private final int INITIAL_LIFE_POINTS = 100;
 
     private String name;
@@ -13,7 +15,7 @@ public class ToCruz<T> implements PlayerADT<T> {
     private Division currentDivision;
     private LinkedStack<Item> bag;
     private final int POWER = 10;
-    private boolean isAlive;
+    private boolean alive;
 
     public ToCruz(String name,Division currentDivision) {
         this.power = POWER;
@@ -21,7 +23,7 @@ public class ToCruz<T> implements PlayerADT<T> {
         this.lifePoints = INITIAL_LIFE_POINTS;
         this.currentDivision = currentDivision;
         this.bag = new LinkedStack<>();
-        this.isAlive = true;
+        this.alive = true;
     }
 
     public ToCruz(String name) {
@@ -30,18 +32,12 @@ public class ToCruz<T> implements PlayerADT<T> {
         this.lifePoints = INITIAL_LIFE_POINTS;
         this.currentDivision = null;
         this.bag = new LinkedStack<>();
-        this.isAlive = true;
+        this.alive = true;
     }
 
     @Override
     public void addItem(Item item) {
-        bag.push(item);
-        System.out.println("Item added to the bag");
-    }
-
-    private void removeItem(Item item) {
-        bag.pop();
-        System.out.println("Item removed from the bag");
+        this.bag.push(item);
     }
 
     // Tem ki djobi inda um lógica midjor, ainda ka sta funciona de midjor forma
@@ -49,49 +45,42 @@ public class ToCruz<T> implements PlayerADT<T> {
     public void movePlayer(Map map, Division division) {
         Division current = getCurrentDivision();
 
-        if (map.getEdges(current).contains(division)) {
-            moveDivision(division);
-        }else {
-            System.out.println("You can't move this division, no connection");
+        if (!map.getEdges(current).contains(division)) {
+            throw new InvalidAction("You can't move this division, no connection");
         }
-    }
-
-    public void moveDivision(Division division) {
-        this.currentDivision = division;
-        System.out.println("Player has moved to the division: " + currentDivision);
+        setDivision(division);
     }
 
     private int LifePointsChanged(int points) {
 
         this.lifePoints += points;
-        System.out.println("The life points changed to " + lifePoints);
-        return lifePoints;
+        return this.lifePoints;
     }
 
     @Override
     public void useItem(Item item) throws ItemNotFound {
-        if (getBag().peek().equals(item)) {
 
+        if (getBag().peek().equals(item)) {
             if (item.getItems().equals(Items.KIT_VIDA)) {
-                if (lifePoints < 100 && LifePointsChanged(item.getPoints()) > 100) {
-                    lifePoints = 100;
+                if (this.lifePoints < INITIAL_LIFE_POINTS && LifePointsChanged(item.getPoints()) > INITIAL_LIFE_POINTS) {
+                    this.lifePoints = INITIAL_LIFE_POINTS;
                 }
-                else if (lifePoints >= 100) {
-                    lifePoints -= item.getPoints();
+                else if (this.lifePoints >= INITIAL_LIFE_POINTS) {
+                    this.lifePoints -= item.getPoints();
                 }
             }
             LifePointsChanged(item.getPoints());
-            removeItem(item);
-            System.out.println("Player has used the item " + item);
-
-        }else {
+            this.bag.pop();
+        }
+        else {
             throw new ItemNotFound("Item not found");
         }
     }
 
     @Override
     public void attack(Enemy enemy) {
-        if (isAlive) {
+
+        if (this.alive) {
             int enemyPoints = enemy.getLifePoints();
             enemyPoints -= power;
             enemy.setLifePoints(enemyPoints);
@@ -99,7 +88,6 @@ public class ToCruz<T> implements PlayerADT<T> {
                 enemy.setAlive(false);
             }
         }
-
     }
 
     public String getName() {
@@ -107,31 +95,31 @@ public class ToCruz<T> implements PlayerADT<T> {
     }
 
     public int getLifePoints() {
-        return lifePoints;
+        return this.lifePoints;
     }
 
     public Division getCurrentDivision() {
-        return currentDivision;
+        return this.currentDivision;
     }
 
     public LinkedStack<Item> getBag() {
-        return bag;
+        return this.bag;
     }
 
-    public int getPower() {
-        return power;
+    public boolean isAlive() {
+        return this.alive;
+    }
+
+    public void setDivision(Division division) {
+        this.currentDivision = division;
     }
 
     public void setLifePoints(int lifePoints) {
         this.lifePoints = lifePoints;
     }
 
-    public boolean isAlive() {
-        return isAlive;
-    }
-
     public void setAlive(boolean alive) {
-        isAlive = alive;
+        this.alive = alive;
     }
 
     @Override

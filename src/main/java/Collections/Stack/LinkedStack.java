@@ -25,6 +25,11 @@ public class LinkedStack<T> implements StackADT<T> {
 
     @Override
     public T pop() {
+
+        if (isEmpty()) {
+            throw new EmptyCollectionException("Stack is empty");
+        }
+
         T element = top.getElement();
         top = top.getNext();
         count--;
