@@ -2,10 +2,7 @@ package Classes;
 
 import Collections.Lists.LinkedUnorderedList;
 import Import.ImportJSON;
-
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
+import Exceptions.ImportException;
 
 public class Building {
 
@@ -15,11 +12,15 @@ public class Building {
     private LinkedUnorderedList<Division> inAndOut;
 
     public Building(String file) {
-
-        this.imprt = new ImportJSON(file);
-        this.goal = imprt.importGoal();
-        this.map = imprt.importBuilding();
-        this.inAndOut = imprt.importInAndOut(this.map);
+        try {
+            this.imprt = new ImportJSON(file);
+            this.goal = imprt.importGoal();
+            this.map = imprt.importBuilding();
+            this.inAndOut = imprt.getInAndOut();
+        } catch (ImportException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately
+        }
     }
 
     public Goal getGoal() {
@@ -67,5 +68,4 @@ public class Building {
 
         return sb.toString();
     }
-
 }

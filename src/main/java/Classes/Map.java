@@ -7,7 +7,7 @@ import Exceptions.ElementNotFound;
 
 public class Map<T> extends Graph<T> {
 
-    public Map(){
+    public Map() {
         super();
     }
 
@@ -20,10 +20,13 @@ public class Map<T> extends Graph<T> {
     }
 
     public boolean[][] getMatrix() {
+        return initializeMatrix(numVertices);
+    }
 
-        boolean[][] matrix = new boolean[numVertices][numVertices];
-        for (int i = 0; i < numVertices; i++) {
-            for (int j = 0; j < numVertices; j++) {
+    private boolean[][] initializeMatrix(int size) {
+        boolean[][] matrix = new boolean[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 matrix[i][j] = adjMatrix[i][j];
             }
         }
@@ -31,15 +34,14 @@ public class Map<T> extends Graph<T> {
     }
 
     public LinkedUnorderedList<T> getEdges(T v) throws ElementNotFound {
-
         int vertex = getIndex(v);
-        if (!indexIsValid(vertex)){
+        if (!indexIsValid(vertex)) {
             throw new ElementNotFound("Vertex not valid");
         }
 
         LinkedUnorderedList<T> edges = new LinkedUnorderedList<>();
         for (int i = 0; i < numVertices; i++) {
-            if(adjMatrix[vertex][i]){
+            if (adjMatrix[vertex][i]) {
                 edges.addToRear(vertices[i]);
             }
         }
@@ -47,13 +49,13 @@ public class Map<T> extends Graph<T> {
     }
 
     public T getVertex(int i) {
-        if (!indexIsValid(i)){
+        if (!indexIsValid(i)) {
             return null;
         }
         return vertices[i];
     }
 
-    public int getNumVertices(){
+    public int getNumVertices() {
         return numVertices;
     }
 

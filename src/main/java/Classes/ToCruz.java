@@ -40,7 +40,6 @@ public class ToCruz<T> implements PlayerADT<T> {
         this.bag.push(item);
     }
 
-    // Tem ki djobi inda um lógica midjor, ainda ka sta funciona de midjor forma
     @Override
     public void movePlayer(Map map, Division division) {
         Division current = getCurrentDivision();

@@ -84,7 +84,8 @@ public class Mission {
                 switch (choice) {
                     case 1: // Movimentação ou ataque de inimigos
                         if (!currentEnemies.isEmpty()) {
-                            combatHandler.scenario1(player, building);
+                            String log = combatHandler.scenario1(player, building);
+                            System.out.println(log);
                         } else {
                             int option = 1;
                             LinkedUnorderedList<Division> neighbors = building.getMap().getEdges(player.getCurrentDivision());
@@ -93,17 +94,20 @@ public class Mission {
                                 System.out.println(option++ + ". " + neighbor.getName());
                             }
                             int divisionOption = scanner.nextInt();
-                            combatHandler.scenario2(player, building, neighbors, divisionOption);
+                            String log = combatHandler.scenario2(player, building, neighbors, divisionOption);
+                            System.out.println(log);
                         }
                         break;
 
                     case 2: // Uso de item
-                        combatHandler.scenario4(player, building);
+                        String log = combatHandler.scenario4(player, building);
+                        System.out.println(log);
                         break;
 
                     case 3: // Procura pelo objetivo
                         if (player.getCurrentDivision().equals(goal.getDivision())) {
-                            combatHandler.scenario6(player, building, goal);
+                            log = combatHandler.scenario6(player, building, goal);
+                            System.out.println(log);
                         } else {
                             System.out.println("You are not in the objective division yet.");
                         }
