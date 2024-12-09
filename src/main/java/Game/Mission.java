@@ -140,6 +140,9 @@ public class Mission {
             if (!player.isAlive()) {
                 gameRunning = false;
             }
+
+            // Exibe o melhor caminho para o objetivo e para o kit de recuperação mais próximo
+            building.displayPaths(player.getCurrentDivision());
         }
 
         scanner.close();

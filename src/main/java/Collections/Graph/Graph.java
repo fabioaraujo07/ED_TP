@@ -130,9 +130,73 @@ public class Graph<T> implements GraphADT<T> {
     }
 
     @Override
-    public Iterator iteratorShortestPath(T startVertex, T targetVertex) {
-        return null;
+    public Iterator<T> iteratorShortestPath(T startVertex, T targetVertex) {
+    int startIndex = getIndex(startVertex);
+    int targetIndex = getIndex(targetVertex);
+
+    if (!indexIsValid(startIndex) || !indexIsValid(targetIndex)) {
+        return new UnorderedArrayList<T>().iterator(); // Caminho vazio
     }
+
+    // Inicialização
+    int[] dist = new int[numVertices];
+    int[] predecessors = new int[numVertices];
+    boolean[] visited = new boolean[numVertices];
+    final int INFINITY = Integer.MAX_VALUE;
+
+    for (int i = 0; i < numVertices; i++) {
+        dist[i] = INFINITY;
+        predecessors[i] = -1;
+        visited[i] = false;
+    }
+
+    dist[startIndex] = 0;
+
+    // Processar todos os vértices
+    for (int i = 0; i < numVertices; i++) {
+        // Escolher o vértice não visitado com a menor distância
+        int minIndex = -1;
+        int minDist = INFINITY;
+
+        for (int j = 0; j < numVertices; j++) {
+            if (!visited[j] && dist[j] < minDist) {
+                minDist = dist[j];
+                minIndex = j;
+            }
+        }
+
+        if (minIndex == -1) break; // Todos os vértices acessíveis já foram processados
+
+        visited[minIndex] = true;
+
+        // Atualizar distâncias dos vértices adjacentes
+        for (int j = 0; j < numVertices; j++) {
+            if (adjMatrix[minIndex][j] && !visited[j]) {
+                int newDist = dist[minIndex] + 1; // Todas as arestas têm peso 1
+                if (newDist < dist[j]) {
+                    dist[j] = newDist;
+                    predecessors[j] = minIndex;
+                }
+            }
+        }
+    }
+
+    // Reconstrução do caminho
+    UnorderedArrayList<T> path = new UnorderedArrayList<>();
+    int step = targetIndex;
+
+    while (step != -1) {
+        path.addToFront(vertices[step]); // Reconstrói o caminho
+        step = predecessors[step];
+    }
+
+    // Verifica se o caminho é válido (se alcançou o vértice inicial)
+    if (path.isEmpty() || !path.first().equals(startVertex)) {
+        return new UnorderedArrayList<T>().iterator(); // Caminho vazio
+    }
+
+    return path.iterator();
+}
 
     @Override
     public boolean isEmpty() {
@@ -144,8 +208,35 @@ public class Graph<T> implements GraphADT<T> {
 
     @Override
     public boolean isConnected() {
+    if (isEmpty()) {
         return false;
     }
+
+    boolean[] visited = new boolean[numVertices];
+    LinkedQueue<Integer> queue = new LinkedQueue<>();
+
+    // Começa a partir do primeiro vértice
+    queue.enqueue(0);
+    visited[0] = true;
+
+    while (!queue.isEmpty()) {
+        int current = queue.dequeue();
+        for (int i = 0; i < numVertices; i++) {
+            if (adjMatrix[current][i] && !visited[i]) {
+                visited[i] = true;
+                queue.enqueue(i);
+            }
+        }
+    }
+
+    // Verifica se todos os vértices foram visitados
+    for (boolean vertexVisited : visited) {
+        if (!vertexVisited) {
+            return false;
+        }
+    }
+    return true;
+}
 
     @Override
     public int size() {
