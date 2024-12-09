@@ -1,0 +1,28 @@
+{
+  "cod-missao": "operation stealth",
+  "versao": 2,
+  "edificio": ["Entrada", "Corredor A", "Sala de Controle", "Laboratório", "Escada 1", "Sala de Reunião", "Escada 2", "Armazém", "Escada 3", "Heliporto"],
+  "ligacoes": [
+    ["Entrada", "Corredor A"],
+    ["Corredor A", "Sala de Controle"],
+    ["Corredor A", "Laboratório"],
+    ["Laboratório", "Escada 1"],
+    ["Sala de Controle", "Escada 1"],
+    ["Escada 1", "Sala de Reunião"],
+    ["Sala de Reunião", "Escada 2"],
+    ["Escada 2", "Armazém"],
+    ["Armazém", "Escada 3"],
+    ["Escada 3", "Heliporto"]
+  ],
+  "inimigos": [
+    {"nome": "enemy1", "poder": 10, "divisao": "Sala de Controle"},
+    {"nome": "enemy2", "poder": 20, "divisao": "Laboratório"},
+    {"nome": "enemy3", "poder": 30, "divisao": "Armazém"}
+  ],
+  "entradas-saidas": ["Entrada", "Heliporto"],
+  "alvo": {"divisao": "Sala de Reunião", "tipo": "resgate"},
+  "itens": [
+    {"divisao": "Laboratório", "pontos-recuperados": 25, "tipo": "kit de vida"},
+    {"divisao": "Armazém", "pontos-extra": 30, "tipo": "colete"}
+  ]
+}

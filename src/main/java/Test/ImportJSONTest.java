@@ -10,7 +10,7 @@ public class ImportJSONTest {
         Map<Division> m;
 //        LinkedUnorderedList<Item> i = new LinkedUnorderedList<>();
         LinkedUnorderedList<Division> io = new LinkedUnorderedList<>();
-        String file = "src/main/resources/Missão.json";
+        String file = "src/main/resources/Missão_v1.json";
         ImportJSON imprt = new ImportJSON(file);
 
         Building building = new Building(file);

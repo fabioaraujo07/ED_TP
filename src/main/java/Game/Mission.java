@@ -13,17 +13,40 @@ public class Mission {
 
         System.out.println("Welcome to the Improbable Mission game!");
 
-        String filepath = "src/main/resources/Missão.json";
+        System.out.println("Available missions:");
+        System.out.println("1. Missao_v1.json");
+        System.out.println("2. Missao_v2.json");
+        System.out.println("3. Missao_v3.json");
+
+        System.out.println("Choose a mission:");
+        int missionChoice = scanner.nextInt();
+        scanner.nextLine(); // consume newline
+
+        String selectedMissionFile = null;
+        switch (missionChoice) {
+            case 1:
+                selectedMissionFile = "src/main/resources/Missão_v1.json";
+                break;
+            case 2:
+                selectedMissionFile = "src/main/resources/Missão_v2.json";
+                break;
+            case 3:
+                selectedMissionFile = "src/main/resources/Missão_v3.json";
+                break;
+            default:
+                System.out.println("Invalid mission choice.");
+                return;
+        }
+
+        System.out.println("Selected mission file: " + selectedMissionFile);
+
+        String filepath = selectedMissionFile;
 
         Building building = new Building(filepath);
         Goal goal = building.getGoal();
         Division startDivision = null;
         ToCruz player = new ToCruz("Tó Cruz");
 
-        System.out.println("\nRegistered divisions in the graph:");
-        for (Division division : building.getMap().getVertexes()) {
-            System.out.println("- " + division.getName());
-        }
 
         CombatHandler combatHandler = new CombatHandler();
 
