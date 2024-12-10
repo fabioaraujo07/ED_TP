@@ -1,11 +1,11 @@
 package Classes;
 
-import Collections.Graph.Graph;
-import Collections.Lists.LinkedUnorderedList;
-import Collections.Lists.UnorderedArrayList;
+import Collections.Array.UnorderedArrayList;
+import Collections.Graph.Network;
+import Collections.Linked.LinkedUnorderedList;
 import Exceptions.ElementNotFound;
 
-public class Map<T> extends Graph<T> {
+public class Map<T> extends Network<T> {
 
     public Map() {
         super();
@@ -19,12 +19,12 @@ public class Map<T> extends Graph<T> {
         return list;
     }
 
-    public boolean[][] getMatrix() {
+    public double[][] getMatrix() {
         return initializeMatrix(numVertices);
     }
 
-    private boolean[][] initializeMatrix(int size) {
-        boolean[][] matrix = new boolean[size][size];
+    private double[][] initializeMatrix(int size) {
+        double[][] matrix = new double[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 matrix[i][j] = adjMatrix[i][j];
@@ -41,7 +41,7 @@ public class Map<T> extends Graph<T> {
 
         LinkedUnorderedList<T> edges = new LinkedUnorderedList<>();
         for (int i = 0; i < numVertices; i++) {
-            if (adjMatrix[vertex][i]) {
+            if (adjMatrix[vertex][i] > 0) {
                 edges.addToRear(vertices[i]);
             }
         }
@@ -71,7 +71,7 @@ public class Map<T> extends Graph<T> {
         sb.append("\nMatriz de Adjacência:\n");
         for (int i = 0; i < numVertices; i++) {
             for (int j = 0; j < numVertices; j++) {
-                sb.append(adjMatrix[i][j] ? "1 " : "0 ");
+                sb.append(adjMatrix[i][j] > 0 ? "1 " : "0 ");
             }
             sb.append("\n");
         }

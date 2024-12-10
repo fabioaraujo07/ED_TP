@@ -1,7 +1,8 @@
 package Game;
 
 import Classes.*;
-import Collections.Lists.LinkedUnorderedList;
+
+import Collections.Linked.LinkedUnorderedList;
 import Enumerations.Items;
 import Exceptions.InvalidAction;
 
@@ -43,6 +44,14 @@ public class CombatHandler {
         for (Enemy defeatedEnemy : defeatedEnemies) {
             currentEnemies.remove(defeatedEnemy);
         }
+
+//        // Enemies counter-attack if they are still alive
+//        for (Enemy enemy : currentEnemies) {
+//            if (enemy.isAlive()) {
+//                enemy.attackPlayer(player);
+//                log.append(enemy.getName()).append(" counter-attacked ").append(player.getName()).append(". Remaining life: ").append(player.getLifePoints()).append("\n");
+//            }
+//        }
 
         // Enemies counter-attack
         log.append(scenario3(player, building));

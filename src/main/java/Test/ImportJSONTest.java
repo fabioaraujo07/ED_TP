@@ -1,7 +1,8 @@
 package Test;
 
 import Classes.*;
-import Collections.Lists.LinkedUnorderedList;
+
+import Collections.Linked.LinkedUnorderedList;
 import Import.ImportJSON;
 
 public class ImportJSONTest {

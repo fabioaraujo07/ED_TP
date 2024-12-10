@@ -1,10 +1,9 @@
 package Classes;
 
-import Collections.Lists.LinkedUnorderedList;
+import Collections.Linked.LinkedUnorderedList;
 import Enumerations.Items;
 import Import.ImportJSON;
 import Exceptions.ImportException;
-import Collections.Graph.Graph;
 
 import java.util.Iterator;
 
@@ -45,18 +44,18 @@ public class Building {
     }
 
     public Division findNearestRecoveryKit(Division start) {
-    Iterator<Division> iterator = map.iteratorBFS(start);
-    while (iterator.hasNext()) {
-        Division division = iterator.next();
-        LinkedUnorderedList<Item> items = division.getItems();
-        for (Item item : items) {
-            if (item.getItems() == Items.KIT_VIDA) {
-                return division;
+        Iterator<Division> iterator = map.iteratorBFS(start);
+        while (iterator.hasNext()) {
+            Division division = iterator.next();
+            LinkedUnorderedList<Item> items = division.getItems();
+            for (Item item : items) {
+                if (item.getItems() == Items.KIT_VIDA) {
+                    return division;
+                }
             }
         }
+        return null;
     }
-    return null;
-}
 
     public void displayPaths(Division start) {
         Iterator<Division> pathToGoal = map.iteratorShortestPath(start, goal.getDivision());
@@ -94,10 +93,10 @@ public class Building {
         }
 
         sb.append("\n  Adjacency Matrix:\n");
-        boolean[][] matrix = map.getMatrix();
+        double[][] matrix = map.getMatrix();
         for (int i = 0; i < map.size(); i++) {
             for (int j = 0; j < map.size(); j++) {
-                sb.append(matrix[i][j] ? "1 " : "0 ");
+                sb.append(matrix[i][j] > 0 ? "1 " : "0 ");
             }
             sb.append("\n");
         }

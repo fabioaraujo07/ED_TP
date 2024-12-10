@@ -1,6 +1,7 @@
 package Classes;
 
-import Collections.Lists.LinkedUnorderedList;
+
+import Collections.Linked.LinkedUnorderedList;
 
 public class Division {
 

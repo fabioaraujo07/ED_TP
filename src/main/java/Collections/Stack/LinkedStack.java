@@ -1,6 +1,8 @@
 package Collections.Stack;
 
-import Collections.Lists.LinearNode;
+
+import Collections.Interfaces.StackADT;
+import Collections.Linked.LinearNode;
 import Exceptions.EmptyCollectionException;
 
 public class LinkedStack<T> implements StackADT<T> {

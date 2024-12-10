@@ -1,11 +1,12 @@
 package Collections.Graph;
 
-import Collections.Lists.LinkedUnorderedList;
-import Collections.Lists.UnorderedArrayList;
-import Collections.Queues.LinkedQueue;
+
+
+
+import Collections.Array.UnorderedArrayList;
+import Collections.Linked.LinkedQueue;
 import Collections.Stack.LinkedStack;
 import Exceptions.ElementNotFound;
-
 
 import java.util.Iterator;
 

@@ -1,9 +1,5 @@
 package Classes;
-import Collections.Lists.LinkedUnorderedList;
-import Interfaces.EnemyADT;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 
 public class Enemy{

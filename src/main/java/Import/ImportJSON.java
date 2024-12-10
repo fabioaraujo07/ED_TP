@@ -1,7 +1,7 @@
 package Import;
 
 import Classes.*;
-import Collections.Lists.LinkedUnorderedList;
+import Collections.Linked.LinkedUnorderedList;
 import Enumerations.Items;
 import Exceptions.ImportException;
 import org.json.simple.JSONArray;

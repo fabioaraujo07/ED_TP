@@ -1,7 +1,8 @@
 package Game;
 
 import Classes.*;
-import Collections.Lists.LinkedUnorderedList;
+
+import Collections.Linked.LinkedUnorderedList;
 import Exceptions.InvalidAction;
 
 import java.util.Scanner;
