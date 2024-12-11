@@ -47,6 +47,13 @@ public class Division {
         this.enemies.remove(enemy);
     }
 
+    public int calculateTotalDamage() {
+        int totalDamage = 0;
+        for (Enemy enemy : enemies) {
+            totalDamage += enemy.getPower();
+        }
+        return totalDamage;
+    }
 
 
     @Override

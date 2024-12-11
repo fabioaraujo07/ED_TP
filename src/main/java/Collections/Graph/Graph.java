@@ -136,10 +136,10 @@ public class Graph<T> implements GraphADT<T> {
     int targetIndex = getIndex(targetVertex);
 
     if (!indexIsValid(startIndex) || !indexIsValid(targetIndex)) {
-        return new UnorderedArrayList<T>().iterator(); // Caminho vazio
+        return new UnorderedArrayList<T>().iterator();
     }
 
-    // Inicialização
+
     int[] dist = new int[numVertices];
     int[] predecessors = new int[numVertices];
     boolean[] visited = new boolean[numVertices];

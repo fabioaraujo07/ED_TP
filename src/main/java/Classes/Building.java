@@ -1,11 +1,14 @@
 package Classes;
 
+import Collections.Graph.Graph;
 import Collections.Linked.LinkedUnorderedList;
 import Enumerations.Items;
 import Import.ImportJSON;
 import Exceptions.ImportException;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 public class Building {
 
@@ -22,7 +25,6 @@ public class Building {
             this.inAndOut = imprt.getInAndOut();
         } catch (ImportException e) {
             e.printStackTrace();
-            // Handle the exception appropriately
         }
     }
 
@@ -112,6 +114,59 @@ public class Building {
             System.out.println();
         }
     }
+
+    public PathResult simulatePath(ToCruz player, LinkedUnorderedList<Division> entries, Goal goal) {
+        Graph<Division> map = this.getMap();
+        LinkedUnorderedList<Division> bestPathToGoal = null;
+        LinkedUnorderedList<Division> bestPathToExit = null;
+        int bestLifePointsRemaining = 0;
+        Division bestEntry = null;
+
+        for (Division entry : entries) {
+            LinkedUnorderedList<Division> tempPathToGoal = new LinkedUnorderedList<>();
+            Iterator<Division> pathToGoal = map.iteratorShortestPath(entry, goal.getDivision());
+            while (pathToGoal.hasNext()) {
+                tempPathToGoal.addToRear(pathToGoal.next());
+            }
+
+            int damageToGoal = 0;
+            LinkedUnorderedList<Division> clearedDivisions = new LinkedUnorderedList<>();
+            for (Division division : tempPathToGoal) {
+                damageToGoal += division.calculateTotalDamage();
+                clearedDivisions.addToRear(division);
+            }
+
+            int lifePointsAfterGoal = player.getLifePoints() - damageToGoal;
+            if (lifePointsAfterGoal <= 0) continue;
+
+            LinkedUnorderedList<Division> tempPathToExit = new LinkedUnorderedList<>();
+            Iterator<Division> pathToExit = map.iteratorShortestPath(goal.getDivision(), entry);
+            while (pathToExit.hasNext()) {
+                tempPathToExit.addToRear(pathToExit.next());
+            }
+
+            int damageToExit = 0;
+            for (Division division : tempPathToExit) {
+                if (!clearedDivisions.contains(division)) {
+                    damageToExit += division.calculateTotalDamage();
+                }
+            }
+
+            int lifePointsRemaining = lifePointsAfterGoal - damageToExit;
+
+            if (lifePointsRemaining > bestLifePointsRemaining) {
+                bestLifePointsRemaining = lifePointsRemaining;
+                bestPathToGoal = tempPathToGoal;
+                bestPathToExit = tempPathToExit;
+                bestEntry = entry;
+            }
+        }
+
+        boolean missionSuccess = bestLifePointsRemaining > 0;
+        return new PathResult(bestPathToGoal, bestPathToExit, bestLifePointsRemaining, missionSuccess, bestEntry);
+    }
+
+
 
     @Override
     public String toString() {

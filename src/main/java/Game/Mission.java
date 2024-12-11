@@ -45,12 +45,23 @@ public class Mission {
 
         Building building = new Building(filepath);
         Goal goal = building.getGoal();
-        Division startDivision = null;
         ToCruz player = new ToCruz("Tó Cruz");
-
 
         CombatHandler combatHandler = new CombatHandler();
 
+        System.out.println("\nChoose mode:");
+        System.out.println("1. Manual");
+        System.out.println("2. Automatic");
+        int modeChoice = scanner.nextInt();
+        scanner.nextLine(); // consume newline
+
+        if (modeChoice == 2) {
+                PathResult result = building.simulatePath(player, building.getInAndOut(), goal);
+                logPathResult(result);
+            return;
+        }
+
+        // Modo manual
         System.out.println("\nGame has started!");
 
         int entranceOption = 1;
@@ -59,7 +70,7 @@ public class Mission {
             System.out.println(entranceOption++ + ". " + entrance.getName());
         }
         int entranceChoice = scanner.nextInt();
-        startDivision = combatHandler.startDivision(player, building, building.getInAndOut(), entranceChoice);
+        Division startDivision = combatHandler.startDivision(player, building, building.getInAndOut(), entranceChoice);
         System.out.println("You are currently in the division: " + startDivision.getName());
         System.out.println("Objective: " + goal.getType() + " in the division " + goal.getDivision().getName());
 
@@ -130,8 +141,8 @@ public class Mission {
 
                     case 3: // Procura pelo objetivo
                         if (player.getCurrentDivision().equals(goal.getDivision())) {
-                            log = combatHandler.scenario6(player, building, goal);
-                            System.out.println(log);
+                            String log1 = combatHandler.scenario6(player, building, goal);
+                            System.out.println(log1);
                         } else {
                             System.out.println("You are not in the objective division yet.");
                         }
@@ -173,4 +184,21 @@ public class Mission {
 
         scanner.close();
     }
+
+    public static void logPathResult(PathResult result) {
+        System.out.println("Path to goal:");
+        for (Division division : result.getPathToGoal()) {
+            System.out.print(division.getName() + " -> ");
+        }
+        System.out.println("Goal");
+
+        System.out.println("Path to exit:");
+        for (Division division : result.getPathToExit()) {
+            System.out.print(division.getName() + " -> ");
+        }
+        System.out.println("Exit");
+
+        System.out.println("Best life points remaining: " + result.getLifePointsRemaining());
+    }
+
 }
