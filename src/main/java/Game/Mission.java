@@ -15,9 +15,9 @@ public class Mission {
         System.out.println("Welcome to the Improbable Mission game!");
 
         System.out.println("Available missions:");
-        System.out.println("1. Missao_v1.json");
-        System.out.println("2. Missao_v2.json");
-        System.out.println("3. Missao_v3.json");
+        System.out.println("1. Pata de Coelho");
+        System.out.println("2. Operation Stealth");
+        System.out.println("3. Infiltration");
 
         System.out.println("Choose a mission:");
         int missionChoice = scanner.nextInt();
@@ -167,6 +167,8 @@ public class Mission {
 
             // Exibe o melhor caminho para o objetivo e para o kit de recuperação mais próximo
             building.displayPaths(player.getCurrentDivision());
+            building.displayItemsLocations();
+            building.printMap(player.getCurrentDivision());
         }
 
         scanner.close();

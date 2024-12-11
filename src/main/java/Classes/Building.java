@@ -80,6 +80,39 @@ public class Building {
         System.out.println();
     }
 
+    public void displayItemsLocations() {
+        System.out.println("\nLocations of recovery kits and vests:");
+
+        for (Division division : map.getVertexes()) {
+            LinkedUnorderedList<Item> items = division.getItems();
+            for (Item item : items) {
+                if (item.getItems() == Items.KIT_VIDA) {
+                    System.out.println("Recovery kit found in: " + division.getName());
+                } else if (item.getItems() == Items.COLETE) {
+                    System.out.println("Vest found in: " + division.getName());
+                }
+            }
+        }
+    }
+
+    public void printMap(Division currentDivision) {
+        System.out.println("\nBuilding Map:");
+
+        for (Division division : map.getVertexes()) {
+            if (division.equals(currentDivision)) {
+                System.out.print("* " + division.getName() + " * -> ");
+            } else {
+                System.out.print("  " + division.getName() + " -> ");
+            }
+
+            LinkedUnorderedList<Division> neighbors = map.getEdges(division);
+            for (Division neighbor : neighbors) {
+                System.out.print(" -> " + neighbor.getName() + " ");
+            }
+            System.out.println();
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
