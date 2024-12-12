@@ -126,15 +126,18 @@ public class Mission {
                                 if (action instanceof PlayerAtackAction) {
                                     currentEnemies = ((PlayerAtackAction) action).getEnemies();
                                     for (Enemy enemy : currentEnemies) {
-                                        System.out.println(player.getName() + " attacked " + enemy.getName() + ". Remaining life: " + enemy.getLifePoints());
-                                        if (!enemy.isAlive()) {
+                                        if (enemy.isAlive()) {
+                                            System.out.println(player.getName() + " attacked " + enemy.getName() + ". Remaining life: " + enemy.getLifePoints());
+                                        } else {
                                             System.out.println(enemy.getName() + " was defeated.");
                                         }
                                     }
                                 } else if (action instanceof EnemyAtackAction) {
                                         currentEnemies = ((EnemyAtackAction) action).getEnemies();
                                         for (Enemy enemy : currentEnemies) {
-                                            System.out.println(enemy.getName() + " counter-attacked " + player.getName() + ". Remaining life: " + player.getLifePoints() + "\n");
+                                            if (enemy.isAlive()) {
+                                                System.out.println(enemy.getName() + " counter-attacked " + player.getName() + ". Remaining life: " + player.getLifePoints() + "\n");
+                                            }
                                         }
                                 } else if (action instanceof EnemyMoveAction) {
                                     UnorderedArrayList<Division> movedFrom = ((EnemyMoveAction) action).getFrom();

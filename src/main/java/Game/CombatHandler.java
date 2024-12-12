@@ -35,8 +35,6 @@ public class CombatHandler {
         } catch (InvalidAction e) {
         }
 
-
-
         if (!player.isAlive()) {
             throw new InvalidAction("To Cruz is dead!!\nMission Failed");
         }

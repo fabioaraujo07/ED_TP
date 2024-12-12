@@ -63,13 +63,13 @@ public class EnemyMoveAction implements Action {
                 } catch (NoSuchElementException e) {
                 }
 
+                from.addToRear(division);
                 Division newDivision = moveNPC(enemy, division, building);
+                to.addToRear(newDivision);
                 // Verifica se o inimigo foi movido para uma nova divisão
                 if (!newDivision.equals(division)) {
                     // Remover o inimigo da divisão original e adicionar na nova
-                    from.addToRear(division);
                     division.removeEnemy(enemy);
-                    to.addToRear(newDivision);
                     newDivision.addEnemy(enemy);
                     log.append(enemy.getName()).append(" moved from ").append(division.getName()).append(" to ").append(newDivision.getName()).append("\n");
 

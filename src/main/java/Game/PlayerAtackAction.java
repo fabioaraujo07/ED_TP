@@ -32,15 +32,19 @@ public class PlayerAtackAction implements Action {
         }
 
         for (Enemy enemy : enemies) {
-            player.attack(enemy);
+            if (enemy.isAlive()) {
+                player.attack(enemy);
+            }
 
             if (!enemy.isAlive()) {
                 defeatedEnemies.addToRear(enemy);
             }
         }
 
-        for (Enemy defeatedEnemy : defeatedEnemies) {
-            enemies.remove(defeatedEnemy);
+        if (defeatedEnemies.size() == enemies.size()) {
+            for (Enemy defeatedEnemy : defeatedEnemies) {
+                enemies.remove(defeatedEnemy);
+            }
         }
         atack = true;
         return atack;
