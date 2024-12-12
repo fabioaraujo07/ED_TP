@@ -145,7 +145,16 @@ public class Mission {
                                     UnorderedArrayList<Division> movedTo = ((EnemyMoveAction) action).getTo();
                                     for (Division to : movedTo) {
                                         for (Enemy enemy : to.getEnemies()) {
-                                                System.out.println(enemy.getName() +" moved to " + to.getName());
+                                            if (movedFrom.contains(to)) {
+                                                System.out.println(enemy.getName() + " stayed at " + to.getName());
+                                            } else {
+                                                System.out.println(enemy.getName() + " moved to " + to.getName());
+                                                if (to.equals(player.getCurrentDivision())) {
+                                                    System.out.println(enemy.getName() + " encountered " + player.getName() + " and is attacking!");
+                                                    enemy.attackPlayer(player);
+                                                    System.out.println(enemy.getName() + " attacked causing " + enemy.getPower() + " damage to " + player.getName() + ".");
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -173,6 +182,11 @@ public class Mission {
                                                 System.out.println(enemy.getName() + " stayed at " + to.getName());
                                             } else {
                                                 System.out.println(enemy.getName() + " moved to " + to.getName());
+                                                if (to.equals(player.getCurrentDivision())) {
+                                                    System.out.println(enemy.getName() + " encountered " + player.getName() + " and is attacking!");
+                                                    enemy.attackPlayer(player);
+                                                    System.out.println(enemy.getName() + " attacked causing " + enemy.getPower() + " damage to " + player.getName() + ".");
+                                                }
                                             }
                                         }
                                     }
