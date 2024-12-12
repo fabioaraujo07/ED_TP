@@ -2,8 +2,10 @@ package Game;
 
 import Classes.*;
 
+import Collections.Array.UnorderedArrayList;
 import Collections.Linked.LinkedUnorderedList;
 import Exceptions.InvalidAction;
+import Interfaces.Action;
 
 import java.util.Scanner;
 
@@ -119,8 +121,31 @@ public class Mission {
                 switch (choice) {
                     case 1: // Movimentação ou ataque de inimigos
                         if (!currentEnemies.isEmpty()) {
-                            String log = combatHandler.scenario1(player, building);
-                            System.out.println(log);
+                            LinkedUnorderedList<Action> actions = combatHandler.scenario1(player, building);
+                            for (Action action : actions) {
+                                if (action instanceof PlayerAtackAction) {
+                                    currentEnemies = ((PlayerAtackAction) action).getEnemies();
+                                    for (Enemy enemy : currentEnemies) {
+                                        System.out.println(player.getName() + " attacked " + enemy.getName() + ". Remaining life: " + enemy.getLifePoints());
+                                        if (!enemy.isAlive()) {
+                                            System.out.println(enemy.getName() + " was defeated.");
+                                        }
+                                    }
+                                } else if (action instanceof EnemyAtackAction) {
+                                        currentEnemies = ((EnemyAtackAction) action).getEnemies();
+                                        for (Enemy enemy : currentEnemies) {
+                                            System.out.println(enemy.getName() + " counter-attacked " + player.getName() + ". Remaining life: " + player.getLifePoints() + "\n");
+                                        }
+                                } else if (action instanceof EnemyMoveAction) {
+                                    UnorderedArrayList<Division> movedFrom = ((EnemyMoveAction) action).getFrom();
+                                    UnorderedArrayList<Division> movedTo = ((EnemyMoveAction) action).getTo();
+                                    for (Division to : movedTo) {
+                                        for (Enemy enemy : to.getEnemies()) {
+                                                System.out.println(enemy.getName() +" moved to " + to.getName());
+                                        }
+                                    }
+                                }
+                            }
                         } else {
                             int option = 1;
                             LinkedUnorderedList<Division> neighbors = building.getMap().getEdges(player.getCurrentDivision());

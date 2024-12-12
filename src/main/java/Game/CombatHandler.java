@@ -5,6 +5,7 @@ import Classes.*;
 import Collections.Linked.LinkedUnorderedList;
 import Enumerations.Items;
 import Exceptions.InvalidAction;
+import Interfaces.Action;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -15,52 +16,66 @@ public class CombatHandler {
     }
 
     // Cenário 1: Ataque de inimigos
-    public String scenario1(ToCruz player, Building building) {
-        StringBuilder log = new StringBuilder();
-        Division currentDivision = player.getCurrentDivision();
-        LinkedUnorderedList<Enemy> currentEnemies = currentDivision.getEnemies();
+    public LinkedUnorderedList<Action> scenario1(ToCruz player, Building building) throws InvalidAction {
 
-        if (currentEnemies.isEmpty()) {
-            throw new InvalidAction("No enemies to attack in the current division.");
-        }
+        LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
+        Action playerAction = new PlayerAtackAction(player);
+        Action enemyAction = new EnemyAtackAction(player);
 
-        // Player attacks enemies
-        for (Enemy enemy : currentEnemies) {
-            player.attack(enemy);
-            log.append(player.getName()).append(" attacked ").append(enemy.getName()).append(". Remaining life: ").append(enemy.getLifePoints()).append("\n");
-        }
-
-        // Remove defeated enemies
-        LinkedUnorderedList<Enemy> defeatedEnemies = new LinkedUnorderedList<>();
-
-        for (Enemy enemy : currentEnemies) {
-            if (!enemy.isAlive()) {
-                defeatedEnemies.addToRear(enemy);
-                log.append(enemy.getName()).append(" was defeated!\n");
+        try {
+            playerAction.execute();
+            actions.addToRear(playerAction);
+            if (enemyAction.execute()) {
+                actions.addToRear(enemyAction);
+                enemyAction = new EnemyMoveAction(player, building);
+                enemyAction.execute();
+                actions.addToRear(enemyAction);
             }
+
+        } catch (InvalidAction e) {
         }
 
-        // Remove os inimigos derrotados fora do loop de iteração principal
-        for (Enemy defeatedEnemy : defeatedEnemies) {
-            currentEnemies.remove(defeatedEnemy);
-        }
 
+
+        if (!player.isAlive()) {
+            throw new InvalidAction("To Cruz is dead!!\nMission Failed");
+        }
+        return actions;
+//            throw new InvalidAction("No enemies to attack in the current division.");
+//        }
+//
+//        // Player attacks enemies
+//        for (Enemy enemy : currentEnemies) {
+//            player.attack(enemy);
+//            log.append(player.getName()).append(" attacked ").append(enemy.getName()).append(". Remaining life: ").append(enemy.getLifePoints()).append("\n");
+//        }
+//
+//        // Remove defeated enemies
+//        LinkedUnorderedList<Enemy> defeatedEnemies = new LinkedUnorderedList<>();
+//
+//        for (Enemy enemy : currentEnemies) {
+//            if (!enemy.isAlive()) {
+//                defeatedEnemies.addToRear(enemy);
+//                log.append(enemy.getName()).append(" was defeated!\n");
+//            }
+//        }
+//
+//        // Remove os inimigos derrotados fora do loop de iteração principal
+//        for (Enemy defeatedEnemy : defeatedEnemies) {
+//            currentEnemies.remove(defeatedEnemy);
+//        }
+//
 //        // Enemies counter-attack if they are still alive
 //        for (Enemy enemy : currentEnemies) {
 //            if (enemy.isAlive()) {
 //                enemy.attackPlayer(player);
 //                log.append(enemy.getName()).append(" counter-attacked ").append(player.getName()).append(". Remaining life: ").append(player.getLifePoints()).append("\n");
 //            }
+//            log.append(scenario3(player, building));
 //        }
+//
+//        // Enemies counter-attack
 
-        // Enemies counter-attack
-        log.append(scenario3(player, building));
-
-        if (!player.isAlive()) {
-            throw new InvalidAction("To Cruz is dead!!\nMission Failed");
-        }
-
-        return log.toString();
     }
 
     // Cenário 2: Movimentação do jogador
@@ -74,15 +89,6 @@ public class CombatHandler {
 
         player.movePlayer(building.getMap(), targetDivision);
         log.append(player.getName()).append(" moved to ").append(player.getCurrentDivision().getName()).append("\n");
-
-        LinkedUnorderedList<Enemy> currentEnemies = player.getCurrentDivision().getEnemies();
-
-        if (!currentEnemies.isEmpty()) {
-            for (Enemy enemy : currentEnemies) {
-                enemy.attackPlayer(player);
-                log.append(enemy.getName()).append(" attacked ").append(player.getName()).append("\n");
-            }
-        }
 
         LinkedUnorderedList<Item> divisionItems = player.getCurrentDivision().getItems();
         if (!divisionItems.isEmpty()) {
@@ -160,14 +166,6 @@ public class CombatHandler {
 
         player.setDivision(targetDivision);
         moveEnemy(player, building);
-
-        LinkedUnorderedList<Enemy> currentEnemies = player.getCurrentDivision().getEnemies();
-
-        if (!currentEnemies.isEmpty()) {
-            for (Enemy enemy : currentEnemies) {
-                enemy.attackPlayer(player);
-            }
-        }
 
         return targetDivision;
     }
