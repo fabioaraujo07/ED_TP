@@ -109,17 +109,19 @@ public LinkedUnorderedList<Action> scenario4(ToCruz player, Building building) t
             actions.addToRear(action);
         }
 
-        actions.addToRear(interactWithGoal(player,goal));
+        actions.addToRear(new GoalInteractionAction(player, goal));
         return actions;
     }
 
     // Cenário 6: Jogador encontra o objetivo sem inimigos
-    public String scenario6(ToCruz player, Building building, Goal goal) {
+    public LinkedUnorderedList<Action> scenario6(ToCruz player, Building building, Goal goal) {
+        LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
         if (!player.getCurrentDivision().equals(goal.getDivision())) {
             throw new InvalidAction("To Cruz has not found the goal yet.");
         }
 
-        return interactWithGoal(player, goal) + "Get out of the building!\n";
+        actions.addToRear(new GoalInteractionAction(player, goal));
+        return actions;
     }
 
     public LinkedUnorderedList<Action> startDivision(ToCruz player, Building building, LinkedUnorderedList<Division> neighbors, int option) throws InvalidAction {
@@ -138,13 +140,6 @@ public LinkedUnorderedList<Action> scenario4(ToCruz player, Building building) t
 
         return actions;
     }
-
-    // Interação com o objetivo
-    private String interactWithGoal(ToCruz player, Goal goal) {
-        goal.setRequired(true);
-        return player.getName() + " interacted with goal: " + goal.getType() + "\nGoal: " + goal.getType() + " successfully retrieved!\n";
-    }
-
 
     // Escolher divisão com base na opção
     private Division findDivisionByOption(LinkedUnorderedList<Division> neighbors, int option) {
