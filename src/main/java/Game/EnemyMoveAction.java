@@ -13,11 +13,11 @@ import java.util.NoSuchElementException;
 
 public class EnemyMoveAction implements Action {
 
-    ToCruz player;
-    Building building;
-    boolean move;
-    UnorderedArrayList<Division> from;
-    UnorderedArrayList<Division> to;
+    private ToCruz player;
+    private Building building;
+    private boolean move;
+    private UnorderedArrayList<Division> from;
+    private UnorderedArrayList<Division> to;
 
     public EnemyMoveAction(ToCruz player, Building building) {
         this.player = player;

@@ -77,29 +77,48 @@ public class CombatHandler {
     }
 
     // Cenário 2: Movimentação do jogador
-    public String scenario2(ToCruz player, Building building, LinkedUnorderedList<Division> neighbors, int option) throws InvalidAction {
-        StringBuilder log = new StringBuilder();
-        Division targetDivision = findDivisionByOption(neighbors, option);
+    public LinkedUnorderedList<Action> scenario2(ToCruz player, Building building, int option) throws InvalidAction {
 
-        if (targetDivision == null) {
-            throw new InvalidAction("Invalid option selected. No movement occurred.");
+        LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
+        Action playerAction = new PlayerMoveAction(player, building, option);
+        Action enemyAction = new EnemyMoveAction(player, building);
+        LinkedUnorderedList<Enemy> currentEnemies = player.getCurrentDivision().getEnemies();
+
+        try {
+            playerAction.execute();
+            actions.addToRear(playerAction);
+            enemyAction.execute();
+            actions.addToRear(enemyAction);
+        } catch (InvalidAction e) {
         }
 
-        player.movePlayer(building.getMap(), targetDivision);
-        log.append(player.getName()).append(" moved to ").append(player.getCurrentDivision().getName()).append("\n");
-
-        LinkedUnorderedList<Item> divisionItems = player.getCurrentDivision().getItems();
-        if (!divisionItems.isEmpty()) {
-            for (Item item : divisionItems){
-                player.addItem(item);
-                if (item.getItems().equals(Items.COLETE)) {
-                    player.useItem(item);
-                }
-                log.append(player.getCurrentDivision().getName()).append(" picked ").append(item.getItems()).append(" and added it to the bag.\n");
-            }
+        if (!player.isAlive()) {
+            throw new InvalidAction("To Cruz is dead!!\nMission Failed");
         }
-        log.append(moveEnemy(player, building));
-        return log.toString();
+        return actions;
+
+//        StringBuilder log = new StringBuilder();
+//        Division targetDivision = findDivisionByOption(neighbors, option);
+//
+//        if (targetDivision == null) {
+//            throw new InvalidAction("Invalid option selected. No movement occurred.");
+//        }
+//
+//        player.movePlayer(building.getMap(), targetDivision);
+//        log.append(player.getName()).append(" moved to ").append(player.getCurrentDivision().getName()).append("\n");
+//
+//        LinkedUnorderedList<Item> divisionItems = player.getCurrentDivision().getItems();
+//        if (!divisionItems.isEmpty()) {
+//            for (Item item : divisionItems){
+//                player.addItem(item);
+//                if (item.getItems().equals(Items.COLETE)) {
+//                    player.useItem(item);
+//                }
+//                log.append(player.getCurrentDivision().getName()).append(" picked ").append(item.getItems()).append(" and added it to the bag.\n");
+//            }
+//        }
+//        log.append(moveEnemy(player, building));
+//        return log.toString();
     }
 
     // Cenário 3: Movimentação dos inimigos

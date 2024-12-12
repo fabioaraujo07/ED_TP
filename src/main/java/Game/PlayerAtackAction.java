@@ -10,7 +10,7 @@ public class PlayerAtackAction implements Action {
 
     private ToCruz player;
     private LinkedUnorderedList<Enemy> enemies;
-    boolean atack;
+    private boolean atack;
 
     public PlayerAtackAction(ToCruz player) {
         this.player = player;
