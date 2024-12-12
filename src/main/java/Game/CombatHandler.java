@@ -122,23 +122,35 @@ public class CombatHandler {
     }
 
     // Cenário 3: Movimentação dos inimigos
-    public String scenario3(ToCruz player, Building building) {
-        return moveEnemy(player, building);
+    public LinkedUnorderedList<Action> scenario3(ToCruz player, Building building) {
+        LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
+        Action enemyAction = new EnemyMoveAction(player, building);
+
+        try {
+            enemyAction.execute();
+            actions.addToRear(enemyAction);
+        } catch (InvalidAction e) {
+        }
+        return actions;
     }
 
     // Cenário 4: Uso de item pelo jogador
-    public String scenario4(ToCruz player, Building building) {
-        if (player.getBag().isEmpty()) {
-            throw new InvalidAction("No items available in the bag.");
-        }
+public LinkedUnorderedList<Action> scenario4(ToCruz player, Building building) throws InvalidAction {
+    LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
+    ItemAction itemAction = new ItemAction(player);
 
-        Item item = (Item) player.getBag().peek();
-        player.useItem(item);
-        String log = player.getName() + " used " + item.getItems() + " and restored health.\n";
-
-        log += scenario3(player, building);
-        return log;
+    if (!itemAction.execute()) {
+        throw new InvalidAction("No items available in the bag.");
     }
+
+    actions.addToRear(itemAction);
+    LinkedUnorderedList<Action> scenario3Actions = scenario3(player, building);
+    for (Action action : scenario3Actions) {
+        actions.addToRear(action);
+    }
+
+    return actions;
+}
 
     // Cenário 5: Jogador encontra o objetivo, mas há inimigos
     public String scenario5(ToCruz player, Building building, Goal goal) {

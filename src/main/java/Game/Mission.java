@@ -7,6 +7,7 @@ import Collections.Linked.LinkedUnorderedList;
 import Exceptions.InvalidAction;
 import Interfaces.Action;
 
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class Mission {
@@ -58,8 +59,8 @@ public class Mission {
         scanner.nextLine(); // consume newline
 
         if (modeChoice == 2) {
-                PathResult result = building.simulatePath(player, building.getInAndOut(), goal);
-                logPathResult(result);
+            PathResult result = building.simulatePath(player, building.getInAndOut(), goal);
+            logPathResult(result);
             return;
         }
 
@@ -120,80 +121,93 @@ public class Mission {
             try {
                 switch (choice) {
                     case 1: // Movimentação ou ataque de inimigos
-                        if (!currentEnemies.isEmpty()) {
-                            LinkedUnorderedList<Action> actions = combatHandler.scenario1(player, building);
-                            for (Action action : actions) {
-                                if (action instanceof PlayerAtackAction) {
-                                    currentEnemies = ((PlayerAtackAction) action).getEnemies();
-                                    for (Enemy enemy : currentEnemies) {
-                                        if (enemy.isAlive()) {
-                                            System.out.println(player.getName() + " attacked " + enemy.getName() + ". To Cruz remaining life: " + enemy.getLifePoints());
-                                        } else {
-                                            System.out.println(enemy.getName() + " was defeated.");
-                                        }
-                                    }
-                                    System.out.println("All enemies were defeated.");
-                                } else if (action instanceof EnemyAtackAction) {
-                                        currentEnemies = ((EnemyAtackAction) action).getEnemies();
-                                        for (Enemy enemy : currentEnemies) {
-                                            if (enemy.isAlive()) {
-                                                System.out.println(enemy.getName() + " counter-attacked " + player.getName() + ". To Cruz remaining life: " + player.getLifePoints() + "\n");
-                                            }
-                                        }
-                                } else if (action instanceof EnemyMoveAction) {
-                                    UnorderedArrayList<Division> movedFrom = ((EnemyMoveAction) action).getFrom();
-                                    UnorderedArrayList<Division> movedTo = ((EnemyMoveAction) action).getTo();
-                                    for (Division to : movedTo) {
-                                        for (Enemy enemy : to.getEnemies()) {
-                                            if (movedFrom.contains(to)) {
-                                                System.out.println(enemy.getName() + " stayed at " + to.getName());
-                                            } else {
-                                                System.out.println(enemy.getName() + " moved to " + to.getName());
-                                                if (to.equals(player.getCurrentDivision())) {
-                                                    System.out.println(enemy.getName() + " encountered " + player.getName() + " and is attacking!");
-                                                    enemy.attackPlayer(player);
-                                                    System.out.println(enemy.getName() + " attacked causing " + enemy.getPower() + " damage to " + player.getName() + ".");
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+    if (!currentEnemies.isEmpty()) {
+        LinkedUnorderedList<Action> actions = combatHandler.scenario1(player, building);
+        boolean allEnemiesDefeated = true;
+        for (Action action : actions) {
+            if (action instanceof PlayerAtackAction) {
+                currentEnemies = ((PlayerAtackAction) action).getEnemies();
+                for (Enemy enemy : currentEnemies) {
+                    if (enemy.isAlive()) {
+                        System.out.println(player.getName() + " attacked " + enemy.getName() + ". Enemy remaining life: " + enemy.getLifePoints());
+                        allEnemiesDefeated = false;
+                    } else {
+                        System.out.println(enemy.getName() + " was defeated.");
+                    }
+                }
+            } else if (action instanceof EnemyAtackAction) {
+                currentEnemies = ((EnemyAtackAction) action).getEnemies();
+                for (Enemy enemy : currentEnemies) {
+                    if (enemy.isAlive()) {
+                        System.out.println(enemy.getName() + " counter-attacked " + player.getName() + ". To Cruz remaining life: " + player.getLifePoints() + "\n");
+                        allEnemiesDefeated = false;
+                    }
+                }
+            } else if (action instanceof EnemyMoveAction) {
+                UnorderedArrayList<Division> movedFrom = ((EnemyMoveAction) action).getFrom();
+                UnorderedArrayList<Division> movedTo = ((EnemyMoveAction) action).getTo();
+                Iterator<Division> fromIterator = movedFrom.iterator();
+                Iterator<Division> toIterator = movedTo.iterator();
+                while (fromIterator.hasNext() && toIterator.hasNext()) {
+                    Division from = fromIterator.next();
+                    Division to = toIterator.next();
+                    for (Enemy enemy : to.getEnemies()) {
+                        if (movedFrom.contains(to)) {
+                            System.out.println(enemy.getName() + " stayed at " + to.getName());
                         } else {
-                            int option = 1;
-                            LinkedUnorderedList<Division> neighbors = building.getMap().getEdges(player.getCurrentDivision());
-                            System.out.println("Choose a division to move:");
-                            for (Division neighbor : neighbors) {
-                                System.out.println(option++ + ". " + neighbor.getName());
-                            }
-                            int divisionOption = scanner.nextInt();
-                            LinkedUnorderedList<Action> actions = combatHandler.scenario2(player, building, divisionOption);
-                            for (Action action : actions) {
-                                if (action instanceof PlayerMoveAction) {
-                                    Division from = ((PlayerMoveAction) action).getFrom();
-                                    Division to = ((PlayerMoveAction) action).getTo();
-                                    System.out.println(player.getName() + " moved from " + from.getName() + " to " + to.getName());
-                                } else if (action instanceof EnemyMoveAction) {
-                                    UnorderedArrayList<Division> movedFrom = ((EnemyMoveAction) action).getFrom();
-                                    UnorderedArrayList<Division> movedTo = ((EnemyMoveAction) action).getTo();
-                                    for (Division to : movedTo) {
-                                        for (Enemy enemy : to.getEnemies()) {
-                                            if (movedFrom.contains(to)) {
-                                                System.out.println(enemy.getName() + " stayed at " + to.getName());
-                                            } else {
-                                                System.out.println(enemy.getName() + " moved to " + to.getName());
-                                                if (to.equals(player.getCurrentDivision())) {
-                                                    System.out.println(enemy.getName() + " encountered " + player.getName() + " and is attacking!");
-                                                    enemy.attackPlayer(player);
-                                                    System.out.println(enemy.getName() + " attacked causing " + enemy.getPower() + " damage to " + player.getName() + ".");
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                            System.out.println(enemy.getName() + " moved from " + from.getName() + " to " + to.getName());
+                            if (to.equals(player.getCurrentDivision())) {
+                                System.out.println(enemy.getName() + " encountered " + player.getName() + " and is attacking!");
+                                enemy.attackPlayer(player);
+                                System.out.println(enemy.getName() + " attacked causing " + enemy.getPower() + " damage to " + player.getName() + ".");
                             }
                         }
-                        break;
+                    }
+                }
+            }
+        }
+        if (allEnemiesDefeated) {
+            System.out.println("All enemies were defeated.");
+        }
+    } else {
+        int option = 1;
+        LinkedUnorderedList<Division> neighbors = building.getMap().getEdges(player.getCurrentDivision());
+        System.out.println("Choose a division to move:");
+        for (Division neighbor : neighbors) {
+            System.out.println(option++ + ". " + neighbor.getName());
+        }
+        int divisionOption = scanner.nextInt();
+        LinkedUnorderedList<Action> actions = combatHandler.scenario2(player, building, divisionOption);
+        for (Action action : actions) {
+            if (action instanceof PlayerMoveAction) {
+                Division from = ((PlayerMoveAction) action).getFrom();
+                Division to = ((PlayerMoveAction) action).getTo();
+                System.out.println(player.getName() + " moved from " + from.getName() + " to " + to.getName());
+            } else if (action instanceof EnemyMoveAction) {
+                UnorderedArrayList<Division> movedFrom = ((EnemyMoveAction) action).getFrom();
+                UnorderedArrayList<Division> movedTo = ((EnemyMoveAction) action).getTo();
+                Iterator<Division> fromIterator = movedFrom.iterator();
+                Iterator<Division> toIterator = movedTo.iterator();
+                while (fromIterator.hasNext() && toIterator.hasNext()) {
+                    Division from = fromIterator.next();
+                    Division to = toIterator.next();
+                    for (Enemy enemy : to.getEnemies()) {
+                        if (movedFrom.contains(to)) {
+                            System.out.println(enemy.getName() + " stayed at " + to.getName());
+                        } else {
+                            System.out.println(enemy.getName() + " moved from " + from.getName() + " to " + to.getName());
+                            if (to.equals(player.getCurrentDivision())) {
+                                System.out.println(enemy.getName() + " encountered " + player.getName() + " and is attacking!");
+                                enemy.attackPlayer(player);
+                                System.out.println(enemy.getName() + " attacked causing " + enemy.getPower() + " damage to " + player.getName() + ".");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    break;
 
                     case 2: // Uso de item
                         String log = combatHandler.scenario4(player, building);
@@ -213,8 +227,7 @@ public class Mission {
                         System.out.println("Exiting Building");
                         if (goal.isRequired()) {
                             System.out.println("Congratulation!! \nMission completed with successs :)");
-                        }
-                        else {
+                        } else {
                             System.out.println("Oh no!! \nYou didn't reach the goal. Mission failed :(");
                         }
                         gameRunning = false;
@@ -261,5 +274,4 @@ public class Mission {
 
         System.out.println("Best life points remaining: " + result.getLifePointsRemaining());
     }
-
 }
