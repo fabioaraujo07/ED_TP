@@ -33,10 +33,7 @@ public class Export {
             if (obj instanceof JSONArray) {
                 resultsList = (JSONArray) obj;
             }
-        } catch (IOException e) {
-            throw new ExportException("File not found, creating a new one.");
-        } catch (ParseException e) {
-            throw new ExportException("File is empty or mal formed, starting with an empty list.");
+        } catch (IOException | ParseException e) {
         }
 
         JSONObject resultDetails = new JSONObject();
