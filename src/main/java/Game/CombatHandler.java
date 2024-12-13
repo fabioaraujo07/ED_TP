@@ -115,12 +115,15 @@ public LinkedUnorderedList<Action> scenario4(ToCruz player, Building building) t
 
     // Cenário 6: Jogador encontra o objetivo sem inimigos
     public LinkedUnorderedList<Action> scenario6(ToCruz player, Building building, Goal goal) {
+
         LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
+        GoalInteractionAction playerAction = new GoalInteractionAction(player, goal);
         if (!player.getCurrentDivision().equals(goal.getDivision())) {
             throw new InvalidAction("To Cruz has not found the goal yet.");
         }
 
-        actions.addToRear(new GoalInteractionAction(player, goal));
+        playerAction.execute();
+        actions.addToRear(playerAction);
         return actions;
     }
 

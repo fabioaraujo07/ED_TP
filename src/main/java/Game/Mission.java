@@ -71,8 +71,7 @@ public class Mission {
             System.out.println(entranceOption++ + ". " + entrance.getName());
         }
         int entranceChoice = scanner.nextInt();
-
-        LinkedUnorderedList<Action> startActions = combatHandler.startDivision(player, building, building.getInAndOut(), entranceChoice);
+        combatHandler.startDivision(player, building, building.getInAndOut(), entranceChoice);
 //        Division startDivision = null;
 //
 //        for (Action action : startActions) {
@@ -212,6 +211,11 @@ public class Mission {
                 System.out.println("Player attacked enemies.");
             } else if (action instanceof EnemyAtackAction) {
                 System.out.println("Enemies attacked the player.");
+            } else if (action instanceof ItemAction) {
+                ItemAction itemAction = (ItemAction) action;
+                System.out.println("Player used an item: " + itemAction.getItem().getItems());
+            } else if (action instanceof GoalInteractionAction) {
+                System.out.println("Player reached the goal.");
             }
         }
     }

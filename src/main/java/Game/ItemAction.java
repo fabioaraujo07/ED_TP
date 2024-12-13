@@ -11,9 +11,7 @@ public class ItemAction implements Action {
 
     public ItemAction(ToCruz player) {
         this.player = player;
-        if (!player.getBag().isEmpty()){
-            this.item = (Item) player.getBag().peek();
-        }
+        this.item = (Item) player.getBag().peek();
     }
 
     @Override
@@ -32,6 +30,4 @@ public class ItemAction implements Action {
     public Item getItem() {
         return item;
     }
-
-
 }

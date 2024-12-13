@@ -37,8 +37,7 @@ public class PlayerMoveAction implements Action {
         return PlayerMove();
     }
 
-    public boolean PlayerMove() throws InvalidAction {
-        StringBuilder log = new StringBuilder();
+    private boolean PlayerMove() throws InvalidAction {
         Division targetDivision = findDivisionByOption(neighbors, option);
 
         if (targetDivision == null) {

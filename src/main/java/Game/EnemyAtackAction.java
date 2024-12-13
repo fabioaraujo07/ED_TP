@@ -24,6 +24,7 @@ public class EnemyAtackAction implements Action {
     }
 
     private boolean EnemyAtack() {
+
         if (enemies.isEmpty()) {
             return false;
         }

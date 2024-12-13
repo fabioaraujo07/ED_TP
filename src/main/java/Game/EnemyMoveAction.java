@@ -33,7 +33,6 @@ public class EnemyMoveAction implements Action {
     }
 
     private boolean moveEnemy() {
-        StringBuilder log = new StringBuilder();
         LinkedUnorderedList<Enemy> enemiesMoved = new LinkedUnorderedList<>();
         // Itera por todas as divisões do mapa
         for (Division division : building.getMap().getVertexes()) {
@@ -64,23 +63,16 @@ public class EnemyMoveAction implements Action {
                 }
 
                 from.addToRear(division);
-                Division newDivision = moveNPC(enemy, division, building);
+                Division newDivision = moveNPC(division, building);
                 to.addToRear(newDivision);
                 // Verifica se o inimigo foi movido para uma nova divisão
                 if (!newDivision.equals(division)) {
                     // Remover o inimigo da divisão original e adicionar na nova
                     division.removeEnemy(enemy);
                     newDivision.addEnemy(enemy);
-                    log.append(enemy.getName()).append(" moved from ").append(division.getName()).append(" to ").append(newDivision.getName()).append("\n");
-
-                } else {
-                    // Caso o inimigo não tenha se movido, ele permanece na mesma divisão
-                    log.append(enemy.getName()).append(" stayed at ").append(newDivision.getName()).append("\n");
                 }
                 if (newDivision.equals(player.getCurrentDivision())) {
-                    log.append(enemy.getName()).append(" encountered To Cruz and is attacking!\n");
                     enemy.attackPlayer(player);
-                    log.append(enemy.getName()).append(" attacked causing ").append(enemy.getPower()).append(" damage to To Cruz.\n");
                 }
                 enemiesMoved.addToFront(enemy);
             }
@@ -89,7 +81,7 @@ public class EnemyMoveAction implements Action {
         return move;
     }
 
-    public Division moveNPC(Enemy enemy, Division division, Building building) {
+    public Division moveNPC(Division division, Building building) {
         // Determina o número de movimentos aleatórios para o inimigo
         int moves = (int) (Math.random() * 3);
 
