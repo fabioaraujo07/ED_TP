@@ -10,13 +10,11 @@ public class PlayerAtackAction implements Action {
 
     private ToCruz player;
     private LinkedUnorderedList<Enemy> enemies;
-    private boolean atack;
     private final LinkedUnorderedList<Enemy> attackedEnemies = new LinkedUnorderedList<>();
 
     public PlayerAtackAction(ToCruz player) {
         this.player = player;
         this.enemies = player.getCurrentDivision().getEnemies();
-        this.atack = false;
     }
 
     @Override
@@ -48,15 +46,14 @@ public class PlayerAtackAction implements Action {
                 enemies.remove(defeatedEnemy);
             }
         }
-        atack = true;
-        return atack;
+        return true;
     }
 
     public LinkedUnorderedList<Enemy> getEnemies() {
         return enemies;
     }
+
     public LinkedUnorderedList<Enemy> getAttackedEnemies() {
         return attackedEnemies;
     }
-
 }

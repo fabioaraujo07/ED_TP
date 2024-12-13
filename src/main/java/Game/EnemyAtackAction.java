@@ -11,12 +11,10 @@ public class EnemyAtackAction implements Action {
     private ToCruz player;
     private LinkedUnorderedList<Enemy> enemies;
     private final LinkedUnorderedList<Enemy> attackingEnemies = new LinkedUnorderedList<>();
-    boolean atack;
 
     public EnemyAtackAction(ToCruz player) {
         this.player = player;
         this.enemies = player.getCurrentDivision().getEnemies();
-        this.atack = false;
     }
 
     @Override
@@ -36,8 +34,7 @@ public class EnemyAtackAction implements Action {
                 attackingEnemies.addToRear(enemy);
             }
         }
-        atack = true;
-        return atack;
+        return true;
     }
 
     public LinkedUnorderedList<Enemy> getEnemies() {

@@ -3,6 +3,7 @@ package Classes;
 import Collections.Linked.LinkedUnorderedList;
 
 public class PathResult {
+
     private LinkedUnorderedList<Division> pathToGoal;
     private LinkedUnorderedList<Division> pathToExit;
     private int lifePointsRemaining;
@@ -30,5 +31,4 @@ public class PathResult {
     public boolean isMissionSuccess() {
         return missionSuccess;
     }
-
 }
