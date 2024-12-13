@@ -82,6 +82,11 @@ public class SimulationResult {
         return missionSuccess;
     }
 
+
+    public void setRemainingLifePoints(int remainingLifePoints) {
+        this.remainingLifePoints = remainingLifePoints;
+    }
+
     /**
      * Sets whether the mission was successful.
      *

@@ -36,7 +36,6 @@ public class Mission {
         }
 
         System.out.println("Selected mission file: " + controller.getSelectedMissionFile());
-
         System.out.println("\nChoose mode:");
         System.out.println("1. Manual");
         System.out.println("2. Automatic");

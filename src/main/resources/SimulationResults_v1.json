@@ -3,4 +3,16 @@
 "totalDamageDealt: ":140,
 "codMission: ":"Pata de Coelho",
 "remainingLifePoints: ":100,
-"missionSuccess: ":true}]
+"missionSuccess: ":true},
+{"healthItemsUsed: ":0,
+"vestsUsed: ":0,
+"totalDamageDealt: ":140,
+"codMission: ":"Pata de Coelho",
+"remainingLifePoints: ":5,
+"missionSuccess: ":false},
+{"healthItemsUsed: ":0,
+"vestsUsed: ":1,
+"totalDamageDealt: ":0,
+"codMission: ":"Pata de Coelho",
+"remainingLifePoints: ":125,
+"missionSuccess: ":false}]

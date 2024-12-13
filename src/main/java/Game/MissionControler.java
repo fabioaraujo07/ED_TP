@@ -198,7 +198,11 @@ public class MissionControler {
             System.out.println("1. Move to another division (Scenario 2)");
             System.out.println("2. Use an item (Scenario 4)");
             System.out.println("3. Search for the objective (Scenario 5 or 6)");
-            System.out.println("4. Exit Building");
+            for (Division division : building.getInAndOut()) {
+                if (player.getCurrentDivision().equals(division)) {
+                    System.out.println("4. Exit Building");
+                }
+            }
             System.out.println("0. Exit the game");
         }
     }
@@ -210,6 +214,7 @@ public class MissionControler {
      * @return the selected division option
      */
     private int chooseDivision(Scanner scanner) {
+
         System.out.println("Choose a division to move:");
         LinkedUnorderedList<Division> neighbors = building.getMap().getEdges(player.getCurrentDivision());
         int option = 1;
@@ -225,6 +230,7 @@ public class MissionControler {
      * @return false to indicate the game should end
      */
     private boolean handleBuildingExit() {
+
         System.out.println("Exiting Building");
         if (goal.isRequired() && player.isAlive()) {
             System.out.println("Congratulations! Mission completed successfully :)");
@@ -253,6 +259,7 @@ public class MissionControler {
      */
     private void finalizeGame() {
         if (currentResult != null) {
+            currentResult.setRemainingLifePoints(player.getLifePoints());
             currentResult.setMissionSuccess(missionSuccess);
             try {
                 Export.saveActionsToJSON(currentResult, resultsFilename);
