@@ -4,15 +4,8 @@ import Classes.*;
 import Collections.Linked.LinkedUnorderedList;
 import Enumerations.Items;
 import Exceptions.InvalidAction;
+import Export.Export;
 import Interfaces.Action;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -20,6 +13,8 @@ public class Mission {
 
     private static SimulationResult currentResult;
     private static boolean missionSuccess = false;
+    private static String resultsFilename;
+    private static String codMission;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -39,12 +34,18 @@ public class Mission {
         switch (missionChoice) {
             case 1:
                 selectedMissionFile = "src/main/resources/Missão_v1.json";
+                resultsFilename = "src/main/resources/SimulationResults_v1.json";
+                codMission = "Pata de Coelho";
                 break;
             case 2:
                 selectedMissionFile = "src/main/resources/Missão_v2.json";
+                resultsFilename = "src/main/resources/SimulationResults_v2.json";
+                codMission = "Operation Stealth";
                 break;
             case 3:
                 selectedMissionFile = "src/main/resources/Missão_v3.json";
+                resultsFilename = "src/main/resources/SimulationResults_v3.json";
+                codMission = "Infiltration";
                 break;
             default:
                 System.out.println("Invalid mission choice.");
@@ -87,7 +88,7 @@ public class Mission {
         System.out.println("You are currently in the division: " + player.getCurrentDivision().getName());
         System.out.println("Objective: " + goal.getType() + " in the division " + goal.getDivision().getName());
 
-        currentResult = new SimulationResult("Pata de Coelho", player.getLifePoints(), 0, 0, 0, missionSuccess);
+        currentResult = new SimulationResult(codMission, player.getLifePoints(), 0, 0, 0, missionSuccess);
 
         boolean gameRunning = true;
 
@@ -201,7 +202,7 @@ public class Mission {
         }
 
         currentResult.setMissionSuccess(missionSuccess);
-        saveResultToJSON(currentResult);
+        Export.saveActionsToJSON(currentResult, resultsFilename);
 
         scanner.close();
     }
@@ -254,45 +255,8 @@ public class Mission {
         currentResult.setRemainingLifePoints(player.getLifePoints());// Atualiza os pontos de vida restantes
     }
 
-    public static void saveResultToJSON(SimulationResult result) {
-        String filename = "src/main/resources/SimulationResults.json";
-        JSONArray resultsList = new JSONArray();
 
-        // Carregar resultados existentes
-        try (FileReader reader = new FileReader(filename)) {
-            JSONParser parser = new JSONParser();
-            Object obj = parser.parse(reader);
-            if (obj instanceof JSONArray) {
-                resultsList = (JSONArray) obj;
-            }
-        } catch (IOException e) {
-            // Arquivo não existe, criar novo
-            System.out.println("File not found, creating a new one.");
-        } catch (ParseException e) {
-            System.out.println("File is empty or malformed, starting with an empty list.");
-        }
-
-        // Adicionar novo resultado à lista de JSONs
-        JSONObject resultDetails = new JSONObject();
-        resultDetails.put("missionVersion", result.getMissionVersion());
-        resultDetails.put("remainingLifePoints", result.getRemainingLifePoints());
-        resultDetails.put("totalDamageDealt", result.getTotalDamages());
-        resultDetails.put("healthItemsUsed", result.getHealthItemsUsed());
-        resultDetails.put("vestsUsed", result.getVestUsed());
-        resultDetails.put("missionSuccess", result.isMissionSuccess());
-
-        resultsList.add(resultDetails);
-
-        // Escrever os resultados no arquivo
-        try (FileWriter file = new FileWriter(filename)) {
-            file.write(resultsList.toJSONString());
-            file.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void logPathResult(PathResult result) {
+    private static void logPathResult(PathResult result) {
         System.out.println("Path to goal:");
         for (Division division : result.getPathToGoal()) {
             System.out.print(division.getName() + " -> ");
