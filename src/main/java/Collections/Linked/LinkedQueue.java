@@ -8,20 +8,37 @@ public class LinkedQueue<T> implements QueueADT<T> {
     private LinearNode<T> front, rear;
     private int count;
 
+    /**
+     * Constructs an empty queue.
+     */
     public LinkedQueue() {
         front = null;
         rear = null;
         count = 0;
     }
 
+    /**
+     * Returns the front node of the queue.
+     *
+     * @return the front node of the queue
+     */
     public LinearNode<T> getFront() {
         return front;
     }
-
+    /**
+     * Returns the rear node of the queue.
+     *
+     * @return the rear node of the queue
+     */
     public LinearNode<T> getRear() {
         return rear;
     }
 
+    /**
+     * Adds the specified element to the rear of the queue.
+     *
+     * @param element the element to be added to the queue
+     */
     @Override
     public void enqueue(T element) {
         LinearNode<T> newNode = new LinearNode<>(element);
@@ -35,6 +52,11 @@ public class LinkedQueue<T> implements QueueADT<T> {
         count++;
     }
 
+    /**
+     * Removes and returns the front element from the queue.
+     *
+     * @return the front element from the queue
+     */
     @Override
     public T dequeue() {
         if (isEmpty()) {
@@ -49,11 +71,21 @@ public class LinkedQueue<T> implements QueueADT<T> {
         return temp.getElement();
     }
 
+    /**
+     * Returns the front element of the queue without removing it.
+     *
+     * @return the front element of the queue
+     */
     @Override
     public T first() {
         return ((T) this.front);
     }
 
+    /**
+     * Returns true if the queue is empty, false otherwise.
+     *
+     * @return true if the queue is empty, false otherwise
+     */
     @Override
     public boolean isEmpty() {
         if (this.front == null){
@@ -62,11 +94,21 @@ public class LinkedQueue<T> implements QueueADT<T> {
         return false;
     }
 
+    /**
+     * Returns the number of elements in the queue.
+     *
+     * @return the number of elements in the queue
+     */
     @Override
     public int size() {
         return this.count;
     }
 
+    /**
+     * Returns a string representation of the queue.
+     *
+     * @return a string representation of the queue
+     */
     @Override
     public String toString() {
         if (isEmpty()) {

@@ -15,10 +15,11 @@ import java.util.Iterator;
  *
  */
 public class Graph<T> implements GraphADT<T> {
+
     protected final int DEFAULT_CAPACITY = 10;
-    protected int numVertices; // number of vertices in the graph
-    protected boolean[][] adjMatrix; // adjacency matrix
-    protected T[] vertices; // values of vertices
+    protected int numVertices;
+    protected boolean[][] adjMatrix;
+    protected T[] vertices;
 
     /**
      * Creates an empty graph.
@@ -39,6 +40,19 @@ public class Graph<T> implements GraphADT<T> {
         addEdge(getIndex(vertex1), getIndex(vertex2));
     }
 
+    /**
+     * Inserts an edge between two vertices of the graph.
+     *
+     * @param index1 the first index
+     * @param index2 the second index
+     */
+    public void addEdge(int index1, int index2) {
+        if (indexIsValid(index1) && indexIsValid(index2)) {
+            adjMatrix[index1][index2] = true;
+            adjMatrix[index2][index1] = true;
+        }
+    }
+
     protected int getIndex(T vertex) {
         for (int i = 0; i < numVertices; i++) {
             if (vertices[i].equals(vertex)) {
@@ -48,6 +62,13 @@ public class Graph<T> implements GraphADT<T> {
         return -1;
     }
 
+    /**
+     * Removes an edge between two vertices of the graph, identified by their values.
+     *
+     * @param vertex1 the first vertex
+     * @param vertex2 the second vertex
+     * @throws ElementNotFound if the graph is empty or either vertex does not exist
+     */
     @Override
     public void removeEdge(T vertex1, T vertex2) {
         if (isEmpty()){
@@ -56,12 +77,25 @@ public class Graph<T> implements GraphADT<T> {
         removeEdge(getIndex(vertex1), getIndex(vertex2));
     }
 
+    /**
+     * Removes an edge between two vertices of the graph, identified by their indices.
+     *
+     * @param index1 the first index
+     * @param index2 the second index
+     */
     private void removeEdge(int index1, int index2) {
         if (indexIsValid(index1) && indexIsValid(index2)) {
             adjMatrix[index1][index2] = false;
             adjMatrix[index2][index1] = false;
         }
     }
+
+    /**
+     * Returns an iterator for a breadth-first search traversal starting at the specified vertex.
+     *
+     * @param startVertex the vertex where the traversal begins
+     * @return an iterator containing the vertices in BFS order
+     */
 
     @Override
     public Iterator iteratorBFS(T startVertex) {
@@ -93,6 +127,12 @@ public class Graph<T> implements GraphADT<T> {
         return resultList.iterator();
     }
 
+    /**
+     * Returns an iterator for a depth-first search traversal starting at the specified vertex.
+     *
+     * @param startVertex the vertex where the traversal begins
+     * @return an iterator containing the vertices in DFS order
+     */
     @Override
     public Iterator iteratorDFS(T startVertex) {
 
@@ -130,75 +170,82 @@ public class Graph<T> implements GraphADT<T> {
         return resultList.iterator();
     }
 
+    /**
+     * Returns an iterator for the shortest path between two vertices.
+     * This implementation assumes all edges have equal weight.
+     *
+     * @param startVertex  the starting vertex
+     * @param targetVertex the target vertex
+     * @return an iterator containing the vertices in the shortest path, or an empty iterator if no path exists
+     */
     @Override
     public Iterator<T> iteratorShortestPath(T startVertex, T targetVertex) {
-    int startIndex = getIndex(startVertex);
-    int targetIndex = getIndex(targetVertex);
+        int startIndex = getIndex(startVertex);
+        int targetIndex = getIndex(targetVertex);
 
-    if (!indexIsValid(startIndex) || !indexIsValid(targetIndex)) {
-        return new UnorderedArrayList<T>().iterator();
-    }
-
-
-    int[] dist = new int[numVertices];
-    int[] predecessors = new int[numVertices];
-    boolean[] visited = new boolean[numVertices];
-    final int INFINITY = Integer.MAX_VALUE;
-
-    for (int i = 0; i < numVertices; i++) {
-        dist[i] = INFINITY;
-        predecessors[i] = -1;
-        visited[i] = false;
-    }
-
-    dist[startIndex] = 0;
-
-    // Processar todos os vértices
-    for (int i = 0; i < numVertices; i++) {
-        // Escolher o vértice não visitado com a menor distância
-        int minIndex = -1;
-        int minDist = INFINITY;
-
-        for (int j = 0; j < numVertices; j++) {
-            if (!visited[j] && dist[j] < minDist) {
-                minDist = dist[j];
-                minIndex = j;
-            }
+        if (!indexIsValid(startIndex) || !indexIsValid(targetIndex)) {
+            return new UnorderedArrayList<T>().iterator();
         }
 
-        if (minIndex == -1) break; // Todos os vértices acessíveis já foram processados
 
-        visited[minIndex] = true;
+        int[] dist = new int[numVertices];
+        int[] predecessors = new int[numVertices];
+        boolean[] visited = new boolean[numVertices];
+        final int INFINITY = Integer.MAX_VALUE;
 
-        // Atualizar distâncias dos vértices adjacentes
-        for (int j = 0; j < numVertices; j++) {
-            if (adjMatrix[minIndex][j] && !visited[j]) {
-                int newDist = dist[minIndex] + 1; // Todas as arestas têm peso 1
-                if (newDist < dist[j]) {
-                    dist[j] = newDist;
-                    predecessors[j] = minIndex;
+        for (int i = 0; i < numVertices; i++) {
+            dist[i] = INFINITY;
+            predecessors[i] = -1;
+            visited[i] = false;
+        }
+
+        dist[startIndex] = 0;
+        for (int i = 0; i < numVertices; i++) {
+
+            int minIndex = -1;
+            int minDist = INFINITY;
+
+            for (int j = 0; j < numVertices; j++) {
+                if (!visited[j] && dist[j] < minDist) {
+                    minDist = dist[j];
+                    minIndex = j;
+                }
+            }
+
+            if (minIndex == -1) break;
+
+            visited[minIndex] = true;
+            for (int j = 0; j < numVertices; j++) {
+                if (adjMatrix[minIndex][j] && !visited[j]) {
+                    int newDist = dist[minIndex] + 1;
+                    if (newDist < dist[j]) {
+                        dist[j] = newDist;
+                        predecessors[j] = minIndex;
+                    }
                 }
             }
         }
+
+        UnorderedArrayList<T> path = new UnorderedArrayList<>();
+        int step = targetIndex;
+
+        while (step != -1) {
+            path.addToFront(vertices[step]);
+            step = predecessors[step];
+        }
+
+        if (path.isEmpty() || !path.first().equals(startVertex)) {
+            return new UnorderedArrayList<T>().iterator();
+        }
+
+        return path.iterator();
     }
 
-    // Reconstrução do caminho
-    UnorderedArrayList<T> path = new UnorderedArrayList<>();
-    int step = targetIndex;
-
-    while (step != -1) {
-        path.addToFront(vertices[step]); // Reconstrói o caminho
-        step = predecessors[step];
-    }
-
-    // Verifica se o caminho é válido (se alcançou o vértice inicial)
-    if (path.isEmpty() || !path.first().equals(startVertex)) {
-        return new UnorderedArrayList<T>().iterator(); // Caminho vazio
-    }
-
-    return path.iterator();
-}
-
+    /**
+     * Checks if the graph is empty.
+     *
+     * @return true if the graph contains no vertices, false otherwise
+     */
     @Override
     public boolean isEmpty() {
         if (numVertices == 0) {
@@ -207,57 +254,59 @@ public class Graph<T> implements GraphADT<T> {
         return false;
     }
 
+    /**
+     * Checks if the graph is connected.
+     * A graph is considered connected if there is a path between any two vertices.
+     *
+     * @return true if the graph is connected, false otherwise
+     */
     @Override
     public boolean isConnected() {
-    if (isEmpty()) {
-        return false;
-    }
-
-    boolean[] visited = new boolean[numVertices];
-    LinkedQueue<Integer> queue = new LinkedQueue<>();
-
-    // Começa a partir do primeiro vértice
-    queue.enqueue(0);
-    visited[0] = true;
-
-    while (!queue.isEmpty()) {
-        int current = queue.dequeue();
-        for (int i = 0; i < numVertices; i++) {
-            if (adjMatrix[current][i] && !visited[i]) {
-                visited[i] = true;
-                queue.enqueue(i);
-            }
-        }
-    }
-
-    // Verifica se todos os vértices foram visitados
-    for (boolean vertexVisited : visited) {
-        if (!vertexVisited) {
+        if (isEmpty()) {
             return false;
         }
-    }
-    return true;
-}
 
+        boolean[] visited = new boolean[numVertices];
+        LinkedQueue<Integer> queue = new LinkedQueue<>();
+
+        queue.enqueue(0);
+        visited[0] = true;
+
+        while (!queue.isEmpty()) {
+            int current = queue.dequeue();
+            for (int i = 0; i < numVertices; i++) {
+                if (adjMatrix[current][i] && !visited[i]) {
+                    visited[i] = true;
+                    queue.enqueue(i);
+                }
+            }
+        }
+
+        for (boolean vertexVisited : visited) {
+            if (!vertexVisited) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns the number of vertices in the graph.
+     *
+     * @return the number of vertices
+     */
     @Override
     public int size() {
         return this.numVertices;
     }
 
     /**
-     * Inserts an edge between two vertices of the graph.
+     * Checks if the index is valid.
      *
-     * @param index1 the first index
-     * @param index2 the second index
+     * @param index the index to check
+     * @return true if the index is valid, false otherwise
      */
-    public void addEdge(int index1, int index2) {
-        if (indexIsValid(index1) && indexIsValid(index2)) {
-            adjMatrix[index1][index2] = true;
-            adjMatrix[index2][index1] = true;
-        }
-    }
-
-    protected    boolean indexIsValid(int index) {
+    protected boolean indexIsValid(int index) {
         return index >= 0 && index < numVertices;
     }
 
@@ -278,6 +327,10 @@ public class Graph<T> implements GraphADT<T> {
         numVertices++;
     }
 
+    /**
+     * Expands the capacity of the graph, doubling the size of the adjacency matrix
+     * and the vertices array.
+     */
     public void expandCapacity(){
         T[] newVertices = (T[]) (new Object[vertices.length * 2]);
         boolean[][] newAdjMatrix = new boolean[vertices.length * 2][vertices.length * 2];
@@ -292,6 +345,12 @@ public class Graph<T> implements GraphADT<T> {
         vertices = newVertices;
     }
 
+    /**
+     * Returns a string representation of the graph, including its vertices
+     * and the adjacency matrix.
+     *
+     * @return a string representation of the graph
+     */
     @Override
     public void removeVertex(T vertex) {
         for (int i = 0; i < numVertices; i++) {
