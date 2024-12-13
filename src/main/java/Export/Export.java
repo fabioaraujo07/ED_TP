@@ -2,6 +2,7 @@ package Export;
 
 import Classes.Division;
 import Collections.Linked.LinkedUnorderedList;
+import Exceptions.ExportException;
 import Game.SimulationResult;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -23,7 +24,7 @@ public class Export {
      * @param result the simulation result to save
      * @param resultsFilename the name of the JSON file to save the results to
      */
-    public static void saveActionsToJSON(SimulationResult result, String resultsFilename) {
+    public static void saveActionsToJSON(SimulationResult result, String resultsFilename)throws ExportException {
         JSONArray resultsList = new JSONArray();
 
         try (FileReader reader = new FileReader(resultsFilename)) {
@@ -33,9 +34,9 @@ public class Export {
                 resultsList = (JSONArray) obj;
             }
         } catch (IOException e) {
-            System.out.println("File not found, creating a new one.");
+            throw new ExportException("File not found, creating a new one.");
         } catch (ParseException e) {
-            System.out.println("File is empty or malformed, starting with an empty list.");
+            throw new ExportException("File is empty or mal formed, starting with an empty list.");
         }
 
         JSONObject resultDetails = new JSONObject();
@@ -52,7 +53,7 @@ public class Export {
             file.write(resultsList.toJSONString().replace(",", ",\n"));
             file.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ExportException("Error writing to file.");
         }
     }
 
@@ -63,7 +64,7 @@ public class Export {
      * @param trajectory the list of divisions in the path
      * @param resultsFilename the name of the JSON file to save the path to
      */
-    public static void savePathToJSON(String mission, LinkedUnorderedList<Division> trajectory, String resultsFilename) {
+    public static void savePathToJSON(String mission, LinkedUnorderedList<Division> trajectory, String resultsFilename) throws ExportException {
         JSONArray resultsList = new JSONArray();
 
         try (FileReader reader = new FileReader(resultsFilename)) {
@@ -73,9 +74,9 @@ public class Export {
                 resultsList = (JSONArray) obj;
             }
         } catch (IOException e) {
-            System.out.println("File not found, creating a new one.");
+            throw new ExportException("File not found, creating a new one.");
         } catch (ParseException e) {
-            System.out.println("File is empty or malformed, starting with an empty list.");
+            throw new ExportException("File is empty or malformed, starting with an empty list.");
         }
 
         JSONArray missionArray = new JSONArray();
@@ -93,7 +94,7 @@ public class Export {
             file.write(resultsList.toJSONString().replace(",", ",\n"));
             file.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ExportException("Error writing to file.");
         }
     }
 }
