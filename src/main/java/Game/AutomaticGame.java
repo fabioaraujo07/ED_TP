@@ -6,9 +6,21 @@ import Collections.Linked.LinkedUnorderedList;
 
 import java.util.Iterator;
 
+/**
+ * Represents an automatic game simulation.
+ */
 public class AutomaticGame {
 
-    public PathResult simulatePath(ToCruz player, LinkedUnorderedList<Division> entries, Goal goal,Graph<Division> map) {
+    /**
+     * Simulates the path for the player to reach the goal and exit the building.
+     *
+     * @param player the player character
+     * @param entries the list of possible entry divisions
+     * @param goal the goal division
+     * @param map the map of the building
+     * @return the result of the pathfinding operation
+     */
+    public PathResult simulatePath(ToCruz player, LinkedUnorderedList<Division> entries, Goal goal, Graph<Division> map) {
         LinkedUnorderedList<Division> bestPathToGoal = null;
         LinkedUnorderedList<Division> bestPathToExit = null;
         int bestLifePointsRemaining = 0;
@@ -50,11 +62,10 @@ public class AutomaticGame {
                 bestLifePointsRemaining = lifePointsRemaining;
                 bestPathToGoal = tempPathToGoal;
                 bestPathToExit = tempPathToExit;
-                bestEntry = entry;
             }
         }
 
         boolean missionSuccess = bestLifePointsRemaining > 0;
-        return new PathResult(bestPathToGoal, bestPathToExit, bestLifePointsRemaining, missionSuccess, bestEntry);
+        return new PathResult(bestPathToGoal, bestPathToExit, bestLifePointsRemaining, missionSuccess);
     }
 }

@@ -8,12 +8,25 @@ import Interfaces.Action;
 
 import java.util.Iterator;
 
+/**
+ * Represents a manual game simulation with various scenarios.
+ */
 public class ManualGame {
 
+    /**
+     * Constructs a ManualGame instance.
+     */
     public ManualGame() {
     }
 
-    // Cenário 1: Ataque de inimigos
+    /**
+     * Scenario 1: Enemy attack.
+     *
+     * @param player the player character
+     * @param building the building where the action takes place
+     * @return the list of actions performed
+     * @throws InvalidAction if the player is dead
+     */
     public LinkedUnorderedList<Action> scenario1(ToCruz player, Building building) throws InvalidAction {
         LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
         Action playerAction = new PlayerAtackAction(player);
@@ -37,7 +50,15 @@ public class ManualGame {
         return actions;
     }
 
-    // Cenário 2: Movimentação do jogador
+    /**
+     * Scenario 2: Player movement.
+     *
+     * @param player the player character
+     * @param building the building where the action takes place
+     * @param option the movement option
+     * @return the list of actions performed
+     * @throws InvalidAction if the player is dead
+     */
     public LinkedUnorderedList<Action> scenario2(ToCruz player, Building building, int option) throws InvalidAction {
         LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
         Action playerAction = new PlayerMoveAction(player, building, option);
@@ -58,7 +79,13 @@ public class ManualGame {
         return actions;
     }
 
-    // Cenário 3: Movimentação dos inimigos
+    /**
+     * Scenario 3: Enemy movement.
+     *
+     * @param player the player character
+     * @param building the building where the action takes place
+     * @return the list of actions performed
+     */
     public LinkedUnorderedList<Action> scenario3(ToCruz player, Building building) {
         LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
         Action enemyAction = new EnemyMoveAction(player, building);
@@ -71,7 +98,14 @@ public class ManualGame {
         return actions;
     }
 
-    // Cenário 4: Uso de item pelo jogador
+    /**
+     * Scenario 4: Player uses an item.
+     *
+     * @param player the player character
+     * @param building the building where the action takes place
+     * @return the list of actions performed
+     * @throws InvalidAction if no items are available in the bag
+     */
     public LinkedUnorderedList<Action> scenario4(ToCruz player, Building building) throws InvalidAction {
         LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
         ItemAction itemAction = new ItemAction(player);
@@ -89,7 +123,15 @@ public class ManualGame {
         return actions;
     }
 
-    // Cenário 5: Jogador encontra o objetivo, mas há inimigos
+    /**
+     * Scenario 5: Player finds the goal but there are enemies.
+     *
+     * @param player the player character
+     * @param building the building where the action takes place
+     * @param goal the goal to interact with
+     * @return the list of actions performed
+     * @throws InvalidAction if the player has not found the goal yet
+     */
     public LinkedUnorderedList<Action> scenario5(ToCruz player, Building building, Goal goal) throws InvalidAction {
         LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
 
@@ -108,7 +150,15 @@ public class ManualGame {
         return actions;
     }
 
-    // Cenário 6: Jogador encontra o objetivo sem inimigos
+    /**
+     * Scenario 6: Player finds the goal without enemies.
+     *
+     * @param player the player character
+     * @param building the building where the action takes place
+     * @param goal the goal to interact with
+     * @return the list of actions performed
+     * @throws InvalidAction if the player has not found the goal yet
+     */
     public LinkedUnorderedList<Action> scenario6(ToCruz player, Building building, Goal goal) {
         LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
         GoalInteractionAction playerAction = new GoalInteractionAction(player, goal);
@@ -121,6 +171,16 @@ public class ManualGame {
         return actions;
     }
 
+    /**
+     * Starts the division with the specified option.
+     *
+     * @param player the player character
+     * @param building the building where the action takes place
+     * @param neighbors the list of neighboring divisions
+     * @param option the selected option
+     * @return the list of actions performed
+     * @throws InvalidAction if the selected option is invalid
+     */
     public LinkedUnorderedList<Action> startDivision(ToCruz player, Building building, LinkedUnorderedList<Division> neighbors, int option) throws InvalidAction {
         LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
         Division targetDivision = findDivisionByOption(neighbors, option);
@@ -137,7 +197,13 @@ public class ManualGame {
         return actions;
     }
 
-    // Escolher divisão com base na opção
+    /**
+     * Finds the division based on the selected option.
+     *
+     * @param neighbors the list of neighboring divisions
+     * @param option the selected option
+     * @return the selected division, or null if the option is invalid
+     */
     private Division findDivisionByOption(LinkedUnorderedList<Division> neighbors, int option) {
         int index = 1;
         for (Division division : neighbors) {
@@ -147,58 +213,5 @@ public class ManualGame {
             index++;
         }
         return null;
-    }
-
-    // Método movido: Encontrar o kit de recuperação mais próximo
-    public Division findNearestRecoveryKit(Division start, Map<Division> map) {
-        Iterator<Division> iterator = map.iteratorBFS(start);
-        while (iterator.hasNext()) {
-            Division division = iterator.next();
-            LinkedUnorderedList<Item> items = division.getItems();
-            for (Item item : items) {
-                if (item.getItems() == Items.KIT_VIDA) {
-                    return division;
-                }
-            }
-        }
-        return null;
-    }
-
-    public void displayPaths(Division start, Goal goal, Map<Division> map) {
-        Iterator<Division> pathToGoal = map.iteratorShortestPath(start, goal.getDivision());
-        Division nearestRecoveryKit = findNearestRecoveryKit(start, map);
-        Iterator<Division> pathToRecoveryKit;
-
-        if (nearestRecoveryKit != null) {
-            pathToRecoveryKit = map.iteratorShortestPath(start, nearestRecoveryKit);
-        } else {
-            pathToRecoveryKit = new LinkedUnorderedList<Division>().iterator();
-        }
-
-        System.out.println("\nBest path to the goal:");
-        while (pathToGoal.hasNext()) {
-            System.out.print(" -> " + pathToGoal.next().getName());
-        }
-
-        System.out.println("\n\nBest path to the nearest recovery kit:");
-        while (pathToRecoveryKit.hasNext()) {
-            System.out.print(" -> " + pathToRecoveryKit.next().getName());
-        }
-        System.out.println();
-    }
-
-    public void displayItemsLocations(Map<Division> map) {
-        System.out.println("\nLocations of recovery kits and vests:");
-
-        for (Division division : map.getVertexes()) {
-            LinkedUnorderedList<Item> items = division.getItems();
-            for (Item item : items) {
-                if (item.getItems() == Items.KIT_VIDA) {
-                    System.out.println("Recovery kit found in: " + division.getName());
-                } else if (item.getItems() == Items.COLETE) {
-                    System.out.println("Vest found in: " + division.getName());
-                }
-            }
-        }
     }
 }

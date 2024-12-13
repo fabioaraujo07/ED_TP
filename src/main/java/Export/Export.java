@@ -12,8 +12,17 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Provides methods to export game results and paths to JSON files.
+ */
 public class Export {
 
+    /**
+     * Saves the actions of a simulation result to a JSON file.
+     *
+     * @param result the simulation result to save
+     * @param resultsFilename the name of the JSON file to save the results to
+     */
     public static void saveActionsToJSON(SimulationResult result, String resultsFilename) {
         JSONArray resultsList = new JSONArray();
 
@@ -24,12 +33,10 @@ public class Export {
                 resultsList = (JSONArray) obj;
             }
         } catch (IOException e) {
-
             System.out.println("File not found, creating a new one.");
         } catch (ParseException e) {
             System.out.println("File is empty or malformed, starting with an empty list.");
         }
-
 
         JSONObject resultDetails = new JSONObject();
         resultDetails.put("codMission: ", result.getMissionVersion());
@@ -41,7 +48,6 @@ public class Export {
 
         resultsList.add(resultDetails);
 
-
         try (FileWriter file = new FileWriter(resultsFilename)) {
             file.write(resultsList.toJSONString().replace(",", ",\n"));
             file.flush();
@@ -50,6 +56,13 @@ public class Export {
         }
     }
 
+    /**
+     * Saves the path of a mission to a JSON file.
+     *
+     * @param mission the mission identifier
+     * @param trajectory the list of divisions in the path
+     * @param resultsFilename the name of the JSON file to save the path to
+     */
     public static void savePathToJSON(String mission, LinkedUnorderedList<Division> trajectory, String resultsFilename) {
         JSONArray resultsList = new JSONArray();
 
@@ -60,7 +73,6 @@ public class Export {
                 resultsList = (JSONArray) obj;
             }
         } catch (IOException e) {
-
             System.out.println("File not found, creating a new one.");
         } catch (ParseException e) {
             System.out.println("File is empty or malformed, starting with an empty list.");

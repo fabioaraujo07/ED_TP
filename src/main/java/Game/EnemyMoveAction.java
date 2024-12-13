@@ -11,6 +11,9 @@ import Interfaces.Action;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Represents an action where enemies move within the building.
+ */
 public class EnemyMoveAction implements Action {
 
     private ToCruz player;
@@ -18,6 +21,12 @@ public class EnemyMoveAction implements Action {
     private UnorderedArrayList<Division> from;
     private UnorderedArrayList<Division> to;
 
+    /**
+     * Constructs an EnemyMoveAction with the specified player and building.
+     *
+     * @param player the player character
+     * @param building the building where the action takes place
+     */
     public EnemyMoveAction(ToCruz player, Building building) {
         this.player = player;
         this.building = building;
@@ -25,11 +34,21 @@ public class EnemyMoveAction implements Action {
         this.to = new UnorderedArrayList<>();
     }
 
+    /**
+     * Executes the enemy move action.
+     *
+     * @return true if the action was executed, false otherwise
+     */
     @Override
     public boolean execute() {
         return moveEnemy();
     }
 
+    /**
+     * Moves enemies within the building.
+     *
+     * @return true if enemies were moved, false otherwise
+     */
     private boolean moveEnemy() {
         LinkedUnorderedList<Enemy> enemiesMoved = new LinkedUnorderedList<>();
 
@@ -69,11 +88,17 @@ public class EnemyMoveAction implements Action {
         return true;
     }
 
+    /**
+     * Moves a non-player character (NPC) to a new division.
+     *
+     * @param division the current division of the NPC
+     * @param building the building where the NPC is located
+     * @return the new division of the NPC
+     */
     public Division moveNPC(Division division, Building building) {
         int moves = (int) (Math.random() * 3);
 
         if (moves > 0) {
-
             Division currentDivision = division;
             for (int i = 0; i < moves; i++) {
                 currentDivision = getRandomDivision(currentDivision, building);
@@ -84,6 +109,13 @@ public class EnemyMoveAction implements Action {
         return division;
     }
 
+    /**
+     * Gets a random neighboring division.
+     *
+     * @param division the current division
+     * @param building the building where the division is located
+     * @return a random neighboring division
+     */
     private Division getRandomDivision(Division division, Building building) {
         LinkedUnorderedList<Division> neighbors = building.getMap().getEdges(division);
 
@@ -100,10 +132,20 @@ public class EnemyMoveAction implements Action {
         return iterator.next();
     }
 
+    /**
+     * Returns the list of divisions from which enemies moved.
+     *
+     * @return the list of divisions from which enemies moved
+     */
     public UnorderedArrayList<Division> getFrom() {
         return from;
     }
 
+    /**
+     * Returns the list of divisions to which enemies moved.
+     *
+     * @return the list of divisions to which enemies moved
+     */
     public UnorderedArrayList<Division> getTo() {
         return to;
     }
