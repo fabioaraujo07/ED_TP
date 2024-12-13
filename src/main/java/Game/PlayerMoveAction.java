@@ -23,8 +23,6 @@ public class PlayerMoveAction implements Action {
         this.player = player;
         this.building = building;
         this.usedItem = false;
-        this.to = null;
-        this.from = null;
         this.option = option;
         this.neighbors = building.getMap().getEdges(player.getCurrentDivision());
         this.from = player.getCurrentDivision();
@@ -55,6 +53,7 @@ public class PlayerMoveAction implements Action {
                     player.useItem(item);
                     usedItem = true;
                 }
+                divisionItems.remove(item);
             }
         }
         return true;

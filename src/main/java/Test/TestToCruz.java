@@ -23,7 +23,7 @@ public class TestToCruz {
         map.addEdge(initialDivision, newDivision);
 
         // Criar o jogador
-        ToCruz<Item> player = new ToCruz<>("John", initialDivision);
+        ToCruz player = new ToCruz("John", initialDivision);
 
         // Exibir informações iniciais do jogador
         System.out.println("Informações iniciais do jogador:");

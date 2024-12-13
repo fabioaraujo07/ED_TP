@@ -4,9 +4,8 @@ import Collections.Stack.LinkedStack;
 import Enumerations.Items;
 import Exceptions.InvalidAction;
 import Exceptions.ItemNotFound;
-import Interfaces.PlayerADT;
 
-public class ToCruz<T> implements PlayerADT<T> {
+public class ToCruz {
 
     private final int INITIAL_LIFE_POINTS = 100;
 
@@ -17,7 +16,7 @@ public class ToCruz<T> implements PlayerADT<T> {
     private final int POWER = 10;
     private boolean alive;
 
-    public ToCruz(String name,Division currentDivision) {
+    public ToCruz(String name, Division currentDivision) {
         this.power = POWER;
         this.name = name;
         this.lifePoints = INITIAL_LIFE_POINTS;
@@ -35,12 +34,10 @@ public class ToCruz<T> implements PlayerADT<T> {
         this.alive = true;
     }
 
-    @Override
     public void addItem(Item item) {
         this.bag.push(item);
     }
 
-    @Override
     public void movePlayer(Map map, Division division) {
         Division current = getCurrentDivision();
 
@@ -56,7 +53,6 @@ public class ToCruz<T> implements PlayerADT<T> {
         return this.lifePoints;
     }
 
-    @Override
     public void useItem(Item item) throws ItemNotFound {
 
         if (getBag().peek().equals(item)) {
@@ -76,7 +72,6 @@ public class ToCruz<T> implements PlayerADT<T> {
         }
     }
 
-    @Override
     public void attack(Enemy enemy) {
 
         if (this.alive) {
