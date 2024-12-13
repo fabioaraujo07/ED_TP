@@ -18,6 +18,7 @@ public class Mission {
      * Starts the game by displaying available missions and modes, and handling user input.
      */
     public void start() {
+
         System.out.println("Welcome to the Improbable Mission game!");
 
         System.out.println("Available missions:");

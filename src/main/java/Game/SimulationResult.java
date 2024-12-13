@@ -92,24 +92,6 @@ public class SimulationResult {
     }
 
     /**
-     * Sets the version of the mission.
-     *
-     * @param missionVersion the new mission version
-     */
-    public void setMissionVersion(String missionVersion) {
-        this.missionVersion = missionVersion;
-    }
-
-    /**
-     * Sets the remaining life points after the simulation.
-     *
-     * @param remainingLifePoints the new remaining life points
-     */
-    public void setRemainingLifePoints(int remainingLifePoints) {
-        this.remainingLifePoints = remainingLifePoints;
-    }
-
-    /**
      * Sets the total damages taken during the simulation.
      *
      * @param totalDamages the new total damages
