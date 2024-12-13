@@ -194,4 +194,8 @@ public class ImportJSON {
         map.addVertex(newDivision);
         return newDivision;
     }
+
+    public String getFilename() {
+        return this.filepath;
+    }
 }
