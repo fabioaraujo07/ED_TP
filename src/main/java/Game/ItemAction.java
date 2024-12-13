@@ -11,7 +11,7 @@ public class ItemAction implements Action {
 
     public ItemAction(ToCruz player) {
         this.player = player;
-        this.item = (Item) player.getBag().peek();
+        this.item = null;
     }
 
     @Override
@@ -19,9 +19,16 @@ public class ItemAction implements Action {
         return useItem();
     }
 
-    private boolean useItem(){
-        if (item != null){
-            player.useItem(item);
+    private boolean useItem() {
+        try {
+            item = (Item) player.getBag().peek();
+        } catch (Exception e) {
+        }
+        if (item != null) {
+            try {
+                player.useItem(item);
+            } catch (Exception e) {
+            }
             return true;
         }
         return false;

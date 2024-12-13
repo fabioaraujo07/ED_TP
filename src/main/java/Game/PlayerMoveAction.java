@@ -12,7 +12,7 @@ import Interfaces.Action;
 public class PlayerMoveAction implements Action {
 
     private ToCruz player;
-    private boolean move;
+    private boolean usedItem;
     private Division from;
     private Division to;
     private Building building;
@@ -22,7 +22,7 @@ public class PlayerMoveAction implements Action {
     public PlayerMoveAction(ToCruz player, Building building, int option) {
         this.player = player;
         this.building = building;
-        this.move = false;
+        this.usedItem = false;
         this.to = null;
         this.from = null;
         this.option = option;
@@ -53,11 +53,11 @@ public class PlayerMoveAction implements Action {
                 player.addItem(item);
                 if (item.getItems().equals(Items.COLETE)) {
                     player.useItem(item);
+                    usedItem = true;
                 }
             }
         }
-        move = true;
-        return move;
+        return true;
     }
 
     private Division findDivisionByOption(LinkedUnorderedList<Division> neighbors, int option) {
@@ -77,5 +77,9 @@ public class PlayerMoveAction implements Action {
 
     public Division getTo() {
         return to;
+    }
+
+    public boolean isUsedItem() {
+        return usedItem;
     }
 }
