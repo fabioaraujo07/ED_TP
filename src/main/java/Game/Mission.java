@@ -6,11 +6,17 @@ public class Mission {
     private MissionControler controller;
     private Scanner scanner;
 
+    /**
+     * Constructs a Mission instance and initializes the controller and scanner.
+     */
     public Mission() {
         this.controller = new MissionControler();
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Starts the game by displaying available missions and modes, and handling user input.
+     */
     public void start() {
         System.out.println("Welcome to the Improbable Mission game!");
 
@@ -44,7 +50,11 @@ public class Mission {
         controller.startManualGame(scanner);
     }
 
-
+    /**
+     * The main method to start the game.
+     *
+     * @param args the command line arguments
+     */
     public static void main(String[] args) {
         Mission mission = new Mission();
         mission.start();

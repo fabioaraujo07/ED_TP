@@ -19,6 +19,13 @@ public class PlayerMoveAction implements Action {
     private int option;
     LinkedUnorderedList<Division> neighbors;
 
+    /**
+     * Constructs a PlayerMoveAction with the specified player, building, and option.
+     *
+     * @param player the player performing the action
+     * @param building the building in which the action takes place
+     * @param option the option selected for the move
+     */
     public PlayerMoveAction(ToCruz player, Building building, int option) {
         this.player = player;
         this.building = building;
@@ -30,11 +37,22 @@ public class PlayerMoveAction implements Action {
 
     }
 
+    /**
+     * Executes the player move action.
+     *
+     * @return true if the action was successful, false otherwise
+     */
     @Override
     public boolean execute() {
         return PlayerMove();
     }
 
+    /**
+     * Moves the player to the target division based on the selected option.
+     *
+     * @return true if the move was successful, false otherwise
+     * @throws InvalidAction if the selected option is invalid
+     */
     private boolean PlayerMove() throws InvalidAction {
         Division targetDivision = findDivisionByOption(neighbors, option);
 
@@ -59,6 +77,13 @@ public class PlayerMoveAction implements Action {
         return true;
     }
 
+    /**
+     * Finds the division corresponding to the selected option.
+     *
+     * @param neighbors the list of neighboring divisions
+     * @param option the selected option
+     * @return the division corresponding to the option, or null if not found
+     */
     private Division findDivisionByOption(LinkedUnorderedList<Division> neighbors, int option) {
         int index = 1;
         for (Division division : neighbors) {
@@ -70,14 +95,29 @@ public class PlayerMoveAction implements Action {
         return null;
     }
 
+    /**
+     * Returns the division from which the player moved.
+     *
+     * @return the division from which the player moved
+     */
     public Division getFrom() {
         return from;
     }
 
+    /**
+     * Returns the division to which the player moved.
+     *
+     * @return the division to which the player moved
+     */
     public Division getTo() {
         return to;
     }
 
+    /**
+     * Returns whether an item was used during the move.
+     *
+     * @return true if an item was used, false otherwise
+     */
     public boolean isUsedItem() {
         return usedItem;
     }

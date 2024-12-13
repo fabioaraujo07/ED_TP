@@ -17,10 +17,21 @@ public class ImportJSON {
     private String filepath;
     private LinkedUnorderedList<Division> inAndOut;
 
+    /**
+     * Constructs an ImportJSON with the specified file path.
+     *
+     * @param filepath the path to the JSON file
+     */
     public ImportJSON(String filepath) {
         this.filepath = filepath;
     }
 
+    /**
+     * Imports the building data from the JSON file.
+     *
+     * @return the map of divisions
+     * @throws ImportException if an error occurs during import
+     */
     public Map<Division> importBuilding() throws ImportException {
         JSONObject jsonObject = parseJSONFile(filepath);
 
@@ -34,6 +45,12 @@ public class ImportJSON {
         return map;
     }
 
+    /**
+     * Imports the goal data from the JSON file.
+     *
+     * @return the goal
+     * @throws ImportException if an error occurs during import
+     */
     public Goal importGoal() throws ImportException {
         JSONObject jsonObject = parseJSONFile(filepath);
 
@@ -49,10 +66,22 @@ public class ImportJSON {
         return new Goal(division, tipo);
     }
 
+    /**
+     * Returns the list of entrance and exit divisions.
+     *
+     * @return the list of entrance and exit divisions
+     */
     public LinkedUnorderedList<Division> getInAndOut() {
         return this.inAndOut;
     }
 
+    /**
+     * Imports the entrance and exit divisions from the JSON file.
+     *
+     * @param map the map of divisions
+     * @return the list of entrance and exit divisions
+     * @throws ImportException if an error occurs during import
+     */
     private LinkedUnorderedList<Division> importInAndOut(Map<Division> map) throws ImportException {
         JSONObject jsonObject = parseJSONFile(filepath);
         LinkedUnorderedList<Division> inAndOut = new LinkedUnorderedList<>();
@@ -72,6 +101,13 @@ public class ImportJSON {
         return inAndOut;
     }
 
+    /**
+     * Parses the JSON file.
+     *
+     * @param filepath the path to the JSON file
+     * @return the parsed JSON object
+     * @throws ImportException if an error occurs during parsing
+     */
     private JSONObject parseJSONFile(String filepath) throws ImportException {
         JSONParser jsonParser = new JSONParser();
         try (FileReader fileReader = new FileReader(filepath)) {
@@ -81,6 +117,13 @@ public class ImportJSON {
         }
     }
 
+    /**
+     * Imports the divisions from the JSON file.
+     *
+     * @param map the map of divisions
+     * @param jsonObject the parsed JSON object
+     * @throws ImportException if an error occurs during import
+     */
     private void importDivisions(Map<Division> map, JSONObject jsonObject) throws ImportException {
         JSONArray edificioArray = (JSONArray) jsonObject.get("edificio");
         if (edificioArray == null) {
@@ -97,6 +140,13 @@ public class ImportJSON {
         }
     }
 
+    /**
+     * Imports the connections between divisions from the JSON file.
+     *
+     * @param map the map of divisions
+     * @param jsonObject the parsed JSON object
+     * @throws ImportException if an error occurs during import
+     */
     private void importConnections(Map<Division> map, JSONObject jsonObject) throws ImportException {
         JSONArray ligacoesArray = (JSONArray) jsonObject.get("ligacoes");
         if (ligacoesArray == null) {
@@ -121,6 +171,13 @@ public class ImportJSON {
         }
     }
 
+    /**
+     * Imports the enemies from the JSON file.
+     *
+     * @param map the map of divisions
+     * @param jsonObject the parsed JSON object
+     * @throws ImportException if an error occurs during import
+     */
     private void importEnemy(Map<Division> map, JSONObject jsonObject) throws ImportException {
         JSONArray enemiesArray = (JSONArray) jsonObject.get("inimigos");
         if (enemiesArray == null) {
@@ -144,6 +201,13 @@ public class ImportJSON {
         }
     }
 
+    /**
+     * Imports the items from the JSON file.
+     *
+     * @param map the map of divisions
+     * @param jsonObject the parsed JSON object
+     * @throws ImportException if an error occurs during import
+     */
     private void importItems(Map<Division> map, JSONObject jsonObject) throws ImportException {
         JSONArray itemsArray = (JSONArray) jsonObject.get("itens");
         if (itemsArray == null) {
@@ -175,6 +239,13 @@ public class ImportJSON {
         }
     }
 
+    /**
+     * Finds a division by name in the map.
+     *
+     * @param map the map of divisions
+     * @param name the name of the division
+     * @return the division, or null if not found
+     */
     private Division findDivisionByName(Map<Division> map, String name) {
         for (int i = 0; i < map.getNumVertices(); i++) {
             if (map.getVertex(i).getName().equals(name)) {
@@ -184,6 +255,13 @@ public class ImportJSON {
         return null;
     }
 
+    /**
+     * Gets or creates a division by name in the map.
+     *
+     * @param map the map of divisions
+     * @param divisionName the name of the division
+     * @return the division
+     */
     private Division getOrCreateDivision(Map<Division> map, String divisionName) {
         for (int i = 0; i < map.getNumVertices(); i++) {
             if (map.getVertex(i).getName().equalsIgnoreCase(divisionName)) {
@@ -195,6 +273,11 @@ public class ImportJSON {
         return newDivision;
     }
 
+    /**
+     * Returns the file path of the JSON file.
+     *
+     * @return the file path
+     */
     public String getFilename() {
         return this.filepath;
     }
