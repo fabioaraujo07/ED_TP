@@ -304,6 +304,7 @@ public class Mission {
             System.out.print(division.getName() + " -> ");
         }
         System.out.println("Exit");
+        System.out.println();
 
         System.out.println("Best life points remaining: " + result.getLifePointsRemaining());
     }
