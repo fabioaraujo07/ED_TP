@@ -29,4 +29,8 @@ public class GoalInteractionAction implements Action {
     public String toString() {
         return player.getName() + " interacted with goal: " + goal.getType() + "\nGoal: " + goal.getType() + " successfully retrieved!\n";
     }
+
+    public Goal getGoal() {
+        return goal;
+    }
 }

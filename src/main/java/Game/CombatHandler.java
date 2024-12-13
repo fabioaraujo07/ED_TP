@@ -79,27 +79,28 @@ public class CombatHandler {
     }
 
     // Cenário 4: Uso de item pelo jogador
-public LinkedUnorderedList<Action> scenario4(ToCruz player, Building building) throws InvalidAction {
-    LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
-    ItemAction itemAction = new ItemAction(player);
+    public LinkedUnorderedList<Action> scenario4(ToCruz player, Building building) throws InvalidAction {
+        LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
+        ItemAction itemAction = new ItemAction(player);
 
-    if (!itemAction.execute()) {
-        throw new InvalidAction("No items available in the bag.");
+        if (!itemAction.execute()) {
+            throw new InvalidAction("No items available in the bag.");
+        }
+
+        actions.addToRear(itemAction);
+        LinkedUnorderedList<Action> scenario3Actions = scenario3(player, building);
+        for (Action action : scenario3Actions) {
+            actions.addToRear(action);
+        }
+
+        return actions;
     }
-
-    actions.addToRear(itemAction);
-    LinkedUnorderedList<Action> scenario3Actions = scenario3(player, building);
-    for (Action action : scenario3Actions) {
-        actions.addToRear(action);
-    }
-
-    return actions;
-}
 
     // Cenário 5: Jogador encontra o objetivo, mas há inimigos
     public LinkedUnorderedList<Action> scenario5(ToCruz player, Building building, Goal goal) throws InvalidAction {
         LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
 
+        GoalInteractionAction playerAction = new GoalInteractionAction(player, goal);
         if (!player.getCurrentDivision().equals(goal.getDivision())) {
             throw new InvalidAction("To Cruz has not found the goal yet.");
         }
@@ -109,7 +110,8 @@ public LinkedUnorderedList<Action> scenario4(ToCruz player, Building building) t
             actions.addToRear(action);
         }
 
-        actions.addToRear(new GoalInteractionAction(player, goal));
+        playerAction.execute();
+        actions.addToRear(playerAction);
         return actions;
     }
 

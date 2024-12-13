@@ -10,6 +10,7 @@ public class EnemyAtackAction implements Action {
 
     private ToCruz player;
     private LinkedUnorderedList<Enemy> enemies;
+    private final LinkedUnorderedList<Enemy> attackingEnemies = new LinkedUnorderedList<>();
     boolean atack;
 
     public EnemyAtackAction(ToCruz player) {
@@ -32,6 +33,7 @@ public class EnemyAtackAction implements Action {
         for (Enemy enemy : enemies) {
             if (enemy.isAlive()) {
                 enemy.attackPlayer(player);
+                attackingEnemies.addToRear(enemy);
             }
         }
         atack = true;
@@ -40,5 +42,8 @@ public class EnemyAtackAction implements Action {
 
     public LinkedUnorderedList<Enemy> getEnemies() {
         return enemies;
+    }
+    public LinkedUnorderedList<Enemy> getAttackingEnemies() {
+        return attackingEnemies;
     }
 }

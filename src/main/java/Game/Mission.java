@@ -2,13 +2,24 @@ package Game;
 
 import Classes.*;
 import Collections.Linked.LinkedUnorderedList;
+import Enumerations.Items;
 import Exceptions.InvalidAction;
-import Game.CombatHandler;
 import Interfaces.Action;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class Mission {
+
+    private static SimulationResult currentResult;
+    private static boolean missionSuccess = false;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -72,21 +83,11 @@ public class Mission {
         }
         int entranceChoice = scanner.nextInt();
         combatHandler.startDivision(player, building, building.getInAndOut(), entranceChoice);
-//        Division startDivision = null;
-//
-//        for (Action action : startActions) {
-//            if (action instanceof PlayerMoveAction) {
-//                startDivision = ((PlayerMoveAction) action).getTo();
-//                break; // Encontrado o movimento inicial do jogador
-//            }
-//        }
-//
-//        if (startDivision == null) {
-//            throw new InvalidAction("Failed to determine the starting division.");
-//        }
 
         System.out.println("You are currently in the division: " + player.getCurrentDivision().getName());
         System.out.println("Objective: " + goal.getType() + " in the division " + goal.getDivision().getName());
+
+        currentResult = new SimulationResult("Pata de Coelho", player.getLifePoints(), 0, 0, 0, missionSuccess);
 
         boolean gameRunning = true;
 
@@ -165,10 +166,12 @@ public class Mission {
 
                     case 4: // Sair do edifício
                         System.out.println("Exiting Building");
-                        if (goal.isRequired()) {
+                        if (goal.isRequired() && player.isAlive()) {
                             System.out.println("Congratulation!! \nMission completed successfully :)");
+                            missionSuccess = true;
                         } else {
                             System.out.println("Oh no!! \nYou didn't reach the goal. Mission failed :(");
+                            missionSuccess = false;
                         }
                         gameRunning = false;
                         break;
@@ -197,29 +200,97 @@ public class Mission {
             building.printMap(player.getCurrentDivision());
         }
 
+        currentResult.setMissionSuccess(missionSuccess);
+        saveResultToJSON(currentResult);
+
         scanner.close();
     }
 
     private static void processActions(LinkedUnorderedList<Action> actions, ToCruz player) {
+
         for (Action action : actions) {
-            if (action instanceof PlayerMoveAction) {
-                PlayerMoveAction moveAction = (PlayerMoveAction) action;
-                System.out.println("Player moved from " + moveAction.getFrom().getName() + " to " + moveAction.getTo().getName());
-            } else if (action instanceof EnemyMoveAction) {
-                System.out.println("Enemies moved.");
-            } else if (action instanceof PlayerAtackAction) {
-                System.out.println("Player attacked enemies.");
+            if (action instanceof PlayerAtackAction) {
+                PlayerAtackAction attackAction = (PlayerAtackAction) action;
+                for (Enemy enemy : attackAction.getAttackedEnemies()) {
+                    currentResult.setTotalDamages(currentResult.getTotalDamages() + enemy.getPower());
+                    System.out.println(player.getName() + " attacked " + enemy.getName() +
+                            ". Enemy remaining life: " + enemy.getLifePoints());
+                }
             } else if (action instanceof EnemyAtackAction) {
-                System.out.println("Enemies attacked the player.");
+                EnemyAtackAction attackAction = (EnemyAtackAction) action;
+                for (Enemy enemy : attackAction.getAttackingEnemies()) {
+                    System.out.println(enemy.getName() + " attacked " + player.getName() +
+                            ". To Cruz remaining life: " + player.getLifePoints());
+                }
+            } else if (action instanceof EnemyMoveAction) {
+                EnemyMoveAction moveAction = (EnemyMoveAction) action;
+                Iterator<Division> fromIterator = moveAction.getFrom().iterator();
+                Iterator<Division> toIterator = moveAction.getTo().iterator();
+                while (fromIterator.hasNext() && toIterator.hasNext()) {
+                    Division from = fromIterator.next();
+                    Division to = toIterator.next();
+                    System.out.println("Enemy moved from " + from.getName() + " to " + to.getName());
+                }
+            } else if (action instanceof GoalInteractionAction) {
+                GoalInteractionAction goalAction = (GoalInteractionAction) action;
+                System.out.println("Objective reached: " + goalAction.getGoal().getType());
             } else if (action instanceof ItemAction) {
                 ItemAction itemAction = (ItemAction) action;
-                System.out.println("Player used an item: " + itemAction.getItem().getItems());
-            } else if (action instanceof GoalInteractionAction) {
-                System.out.println("Player reached the goal.");
+                if (itemAction.getItem().getItems().equals(Items.KIT_VIDA)) {
+                    currentResult.setHealthItemsUsed(currentResult.getHealthItemsUsed() + 1);
+                    System.out.println(player.getName() + " used a health item.");
+                } else if (itemAction.getItem().getItems().equals(Items.COLETE)) {
+                    currentResult.setVestUsed(currentResult.getVestUsed() + 1);
+                    System.out.println(player.getName() + " used a vest.");
+                }
             }
         }
+
+        if (player.getCurrentDivision().getItems().equals(Items.COLETE)) {
+            currentResult.setVestUsed(currentResult.getVestUsed() + 1);
+            System.out.println(player.getName() + " found and used a vest in the division.");
+        }
+
+        currentResult.setRemainingLifePoints(player.getLifePoints());
     }
 
+    public static void saveResultToJSON(SimulationResult result) {
+        String filename = "src/main/resources/SimulationResults.json";
+        JSONArray resultsList = new JSONArray();
+
+        // Carregar resultados existentes
+        try (FileReader reader = new FileReader(filename)) {
+            JSONParser parser = new JSONParser();
+            Object obj = parser.parse(reader);
+            if (obj instanceof JSONArray) {
+                resultsList = (JSONArray) obj;
+            }
+        } catch (IOException e) {
+            // Arquivo não existe, criar novo
+            System.out.println("File not found, creating a new one.");
+        } catch (ParseException e) {
+            System.out.println("File is empty or malformed, starting with an empty list.");
+        }
+
+        // Adicionar novo resultado à lista de JSONs
+        JSONObject resultDetails = new JSONObject();
+        resultDetails.put("missionVersion", result.getMissionVersion());
+        resultDetails.put("remainingLifePoints", result.getRemainingLifePoints());
+        resultDetails.put("totalDamageDealt", result.getTotalDamages());
+        resultDetails.put("healthItemsUsed", result.getHealthItemsUsed());
+        resultDetails.put("vestsUsed", result.getVestUsed());
+        resultDetails.put("missionSuccess", result.isMissionSuccess());
+
+        resultsList.add(resultDetails);
+
+        // Escrever os resultados no arquivo
+        try (FileWriter file = new FileWriter(filename)) {
+            file.write(resultsList.toJSONString());
+            file.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void logPathResult(PathResult result) {
         System.out.println("Path to goal:");
