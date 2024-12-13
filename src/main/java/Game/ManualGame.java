@@ -63,7 +63,6 @@ public class ManualGame {
         LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
         Action playerAction = new PlayerMoveAction(player, building, option);
         Action enemyAction = new EnemyMoveAction(player, building);
-        LinkedUnorderedList<Enemy> currentEnemies = player.getCurrentDivision().getEnemies();
 
         try {
             playerAction.execute();
@@ -154,12 +153,11 @@ public class ManualGame {
      * Scenario 6: Player finds the goal without enemies.
      *
      * @param player the player character
-     * @param building the building where the action takes place
      * @param goal the goal to interact with
      * @return the list of actions performed
      * @throws InvalidAction if the player has not found the goal yet
      */
-    public LinkedUnorderedList<Action> scenario6(ToCruz player, Building building, Goal goal) {
+    public LinkedUnorderedList<Action> scenario6(ToCruz player, Goal goal) {
         LinkedUnorderedList<Action> actions = new LinkedUnorderedList<>();
         GoalInteractionAction playerAction = new GoalInteractionAction(player, goal);
         if (!player.getCurrentDivision().equals(goal.getDivision())) {

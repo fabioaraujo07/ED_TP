@@ -96,15 +96,6 @@ public class PlayerMoveAction implements Action {
     }
 
     /**
-     * Returns the division from which the player moved.
-     *
-     * @return the division from which the player moved
-     */
-    public Division getFrom() {
-        return from;
-    }
-
-    /**
      * Returns the division to which the player moved.
      *
      * @return the division to which the player moved

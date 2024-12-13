@@ -66,15 +66,6 @@ public class PlayerAtackAction implements Action {
     }
 
     /**
-     * Returns the list of enemies in the current division.
-     *
-     * @return the list of enemies
-     */
-    public LinkedUnorderedList<Enemy> getEnemies() {
-        return enemies;
-    }
-
-    /**
      * Returns the list of enemies that were attacked.
      *
      * @return the list of attacked enemies

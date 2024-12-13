@@ -47,7 +47,6 @@ public class ItemAction implements Action {
             try {
                 player.useItem(item);
             } catch (Exception e) {
-                // Handle exception if needed
             }
             return true;
         }
