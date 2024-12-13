@@ -3,6 +3,7 @@ package Game;
 import Classes.*;
 import Collections.Linked.LinkedUnorderedList;
 import Enumerations.Items;
+import Exceptions.ExportException;
 import Exceptions.InvalidAction;
 import Export.Export;
 import Interfaces.Action;
@@ -253,8 +254,12 @@ public class MissionControler {
     private void finalizeGame() {
         if (currentResult != null) {
             currentResult.setMissionSuccess(missionSuccess);
-            Export.saveActionsToJSON(currentResult, resultsFilename);
-            Export.savePathToJSON(codMission, trajectory, "src/main/resources/Trajectory.json");
+            try {
+                Export.saveActionsToJSON(currentResult, resultsFilename);
+                Export.savePathToJSON(codMission, trajectory, "src/main/resources/Trajectory.json");
+            }catch (ExportException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
