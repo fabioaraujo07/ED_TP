@@ -251,7 +251,7 @@ public class Mission {
             System.out.println(player.getName() + " found and used a vest in the division.");
         }
 
-        currentResult.setRemainingLifePoints(player.getLifePoints());
+        currentResult.setRemainingLifePoints(player.getLifePoints());// Atualiza os pontos de vida restantes
     }
 
     public static void saveResultToJSON(SimulationResult result) {
