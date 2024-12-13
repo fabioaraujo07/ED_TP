@@ -24,7 +24,6 @@ public class AutomaticGame {
         LinkedUnorderedList<Division> bestPathToGoal = null;
         LinkedUnorderedList<Division> bestPathToExit = null;
         int bestLifePointsRemaining = 0;
-        Division bestEntry = null;
 
         for (Division entry : entries) {
             LinkedUnorderedList<Division> tempPathToGoal = new LinkedUnorderedList<>();

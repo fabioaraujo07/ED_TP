@@ -56,15 +56,6 @@ public class EnemyAtackAction implements Action {
     }
 
     /**
-     * Returns the list of enemies.
-     *
-     * @return the list of enemies
-     */
-    public LinkedUnorderedList<Enemy> getEnemies() {
-        return enemies;
-    }
-
-    /**
      * Returns the list of attacking enemies.
      *
      * @return the list of attacking enemies

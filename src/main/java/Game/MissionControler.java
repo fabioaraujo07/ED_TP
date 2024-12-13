@@ -150,7 +150,7 @@ public class MissionControler {
                     break;
                 case 3:
                     if (player.getCurrentDivision().equals(goal.getDivision())) {
-                        actions = manualGame.scenario6(player, building, goal);
+                        actions = manualGame.scenario6(player, goal);
                         processActions(actions);
                     } else {
                         System.out.println("You are not in the objective division yet.");
@@ -285,7 +285,11 @@ public class MissionControler {
                 while (fromIterator.hasNext() && toIterator.hasNext()) {
                     Division from = fromIterator.next();
                     Division to = toIterator.next();
-                    System.out.println("Enemy moved from " + from.getName() + " to " + to.getName());
+                    if (from.equals(to)) {
+                        System.out.println("Enemy stayed in " + from.getName());
+                    } else {
+                        System.out.println("Enemy moved from " + from.getName() + " to " + to.getName());
+                    }
                 }
             } else if (action instanceof GoalInteractionAction) {
                 GoalInteractionAction goalAction = (GoalInteractionAction) action;
@@ -407,24 +411,6 @@ public class MissionControler {
      */
     public ToCruz getPlayer() {
         return player;
-    }
-
-    /**
-     * Returns the goal.
-     *
-     * @return the goal
-     */
-    public Goal getGoal() {
-        return goal;
-    }
-
-    /**
-     * Returns the building.
-     *
-     * @return the building
-     */
-    public Building getBuilding() {
-        return building;
     }
 
     /**
