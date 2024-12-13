@@ -15,6 +15,7 @@ public class Mission {
     private static boolean missionSuccess = false;
     private static String resultsFilename;
     private static String codMission;
+    private static LinkedUnorderedList<Division> trajectory = new LinkedUnorderedList<>();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -30,6 +31,7 @@ public class Mission {
         int missionChoice = scanner.nextInt();
         scanner.nextLine(); // consume newline
 
+        String trajectoryFilename = "src/main/resources/Trajectory.json";
         String selectedMissionFile = null;
         switch (missionChoice) {
             case 1:
@@ -84,7 +86,7 @@ public class Mission {
         }
         int entranceChoice = scanner.nextInt();
         combatHandler.startDivision(player, building, building.getInAndOut(), entranceChoice);
-
+        trajectory.addToRear(player.getCurrentDivision());
         System.out.println("You are currently in the division: " + player.getCurrentDivision().getName());
         System.out.println("Objective: " + goal.getType() + " in the division " + goal.getDivision().getName());
 
@@ -174,11 +176,18 @@ public class Mission {
                             System.out.println("Oh no!! \nYou didn't reach the goal. Mission failed :(");
                             missionSuccess = false;
                         }
+                        Iterator<Division> iterator = trajectory.iterator();
+                        System.out.println("Trajectory:");
+                        while (iterator.hasNext()) {
+                            System.out.print(" -> " + iterator.next().getName());
+                        }
+                        System.out.println();
                         gameRunning = false;
                         break;
 
                     case 0: // Saída do jogo
                         System.out.println("Exiting the game. See you next time!");
+                        currentResult = null;
                         gameRunning = false;
                         break;
 
@@ -201,9 +210,11 @@ public class Mission {
             building.printMap(player.getCurrentDivision());
         }
 
-        currentResult.setMissionSuccess(missionSuccess);
-        Export.saveActionsToJSON(currentResult, resultsFilename);
-
+        if (currentResult != null) {
+            currentResult.setMissionSuccess(missionSuccess);
+            Export.saveActionsToJSON(currentResult, resultsFilename);
+            Export.savePathToJSON(codMission, trajectory, trajectoryFilename);
+        }
         scanner.close();
     }
 
@@ -244,6 +255,13 @@ public class Mission {
                     currentResult.setVestUsed(currentResult.getVestUsed() + 1);
                     System.out.println(player.getName() + " used a vest.");
                 }
+            } else if (action instanceof PlayerMoveAction) {
+                PlayerMoveAction moveAction = (PlayerMoveAction) action;
+                trajectory.addToRear(moveAction.getTo());
+                if(moveAction.isUsedItem()) {
+                    currentResult.setVestUsed(currentResult.getVestUsed() + 1);
+                }
+                System.out.println(player.getName() + " moved to " + moveAction.getTo().getName());
             }
         }
 
